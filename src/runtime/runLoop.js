@@ -37,14 +37,15 @@ export function run(workspace) {
 
 export function stop() {
   const state = getRunState();
+  // Reset also calls stop after successful completion, when a tone may still play.
+  clearExecution();
   if (state === RunState.IDLE || state === RunState.STOPPED) return;
 
-  clearExecution();
   setRunState(RunState.STOPPED);
   appendConsoleMessage(t('PROGRAM_STOPPED'), 'warn');
 }
 
-function clearExecution() {
+function clearExecution(stopAudio = true) {
   if (_rafId !== null) {
     cancelAnimationFrame(_rafId);
     _rafId = null;
@@ -56,6 +57,7 @@ function clearExecution() {
   asyncTicket.resolveCondition = null;
   asyncTicket.callback = null;
   resetMotors();
+  if (stopAudio) robotAPI.audio_stop();
 }
 
 function _tick() {
@@ -121,7 +123,7 @@ function advanceInterpreter() {
 
   for (let i = 0; i < STEP_BUDGET_PER_FRAME; i++) {
     if (!stepInterpreter()) {
-      clearExecution();
+      clearExecution(false); // Let fire-and-forget tones finish after normal completion.
       setRunState(RunState.IDLE);
       appendConsoleMessage(t('PROGRAM_FINISHED'), 'info');
       return;
