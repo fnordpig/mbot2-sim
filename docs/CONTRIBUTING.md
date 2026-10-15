@@ -192,7 +192,9 @@ See `CLAUDE.md` Rule 9 for the reserved colour table. Do not add reserved colour
 
 ## Testing
 
-There are no automated tests. The project was validated by manual acceptance criteria at the end of each phase (see `docs/HISTORY.md`). If you want to add tests, that is welcome — there is no test framework in place, so you would need to introduce one. The most valuable test targets would be:
+Run `npm test` for runtime regression checks using Node's built-in test runner. The tests exercise the actual Blockly generator and JS-Interpreter with controlled animation frames and audio.
+
+The project also uses manual acceptance criteria (see `docs/HISTORY.md`). Additional useful test targets include:
 
 - `src/sim/kinematics.js` — pure function, easy to unit test
 - `src/codegen/*.js` — generate code from a known workspace XML, assert the JS string
