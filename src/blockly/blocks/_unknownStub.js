@@ -1,3 +1,4 @@
+import { t } from '../../i18n/index.js';
 import * as Blockly from 'blockly';
 
 // kind: 'value' → setOutput(true); 'statement' → setPreviousStatement + setNextStatement
@@ -95,7 +96,7 @@ export function registerUnknownStubs() {
           this.appendValueInput(name);
         }
         this.setColour('#ff4444');
-        this.setTooltip('Bloco ainda não implementado (Fase 3B).');
+        this.setTooltip(t('BLOCK_BLOCK_NOT_YET_IMPLEMENTED_PHASE_3B'));
         if (spec.kind === 'value') {
           this.setOutput(true);
         } else {

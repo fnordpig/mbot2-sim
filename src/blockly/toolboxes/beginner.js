@@ -5,7 +5,7 @@ export const beginnerToolbox = {
   contents: [
     {
       kind: 'category',
-      name: 'Ação',
+      name: '%{BKY_BLOCK_ACTION}',
       colour: '20',
       contents: [
         {
@@ -99,7 +99,7 @@ export const beginnerToolbox = {
     },
     {
       kind: 'category',
-      name: 'Sensores',
+      name: '%{BKY_BLOCK_SENSORS}',
       colour: '200',
       contents: [
         { kind: 'block', type: 'robSensors_ultrasonic_getSample' },
@@ -117,7 +117,7 @@ export const beginnerToolbox = {
     },
     {
       kind: 'category',
-      name: 'Controlo',
+      name: '%{BKY_BLOCK_CONTROL}',
       colour: '120',
       contents: [
         { kind: 'block', type: 'robControls_if' },
@@ -157,7 +157,7 @@ export const beginnerToolbox = {
     },
     {
       kind: 'category',
-      name: 'Lógica',
+      name: '%{BKY_BLOCK_LOGIC}',
       colour: '210',
       contents: [
         { kind: 'block', type: 'logic_compare' },
@@ -167,7 +167,7 @@ export const beginnerToolbox = {
     },
     {
       kind: 'category',
-      name: 'Matemática',
+      name: '%{BKY_BLOCK_MATHS}',
       colour: '230',
       contents: [
         { kind: 'block', type: 'math_number' },
@@ -177,7 +177,7 @@ export const beginnerToolbox = {
     // TOOLBOX_NN excluded per CLAUDE.md rule 6
     {
       kind: 'category',
-      name: 'Texto',
+      name: '%{BKY_BLOCK_TEXT}',
       colour: '160',
       contents: [
         { kind: 'block', type: 'text' },
@@ -186,7 +186,7 @@ export const beginnerToolbox = {
     },
     {
       kind: 'category',
-      name: 'Cor',
+      name: '%{BKY_BLOCK_COLOUR_COR}',
       colour: '20',
       contents: [
         { kind: 'block', type: 'robColour_picker', fields: { COLOUR: '#cc0000' } },
@@ -200,6 +200,6 @@ export const beginnerToolbox = {
         { kind: 'block', type: 'robColour_picker', fields: { COLOUR: '#000000' } },
       ],
     },
-    { kind: 'category', name: 'Variáveis', custom: 'VARIABLE', colour: '330' },
+    { kind: 'category', name: '%{BKY_BLOCK_VARIABLES}', custom: 'VARIABLE', colour: '330' },
   ],
 };

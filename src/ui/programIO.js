@@ -1,3 +1,4 @@
+import { t } from '../i18n/index.js';
 import * as Blockly from 'blockly';
 import { getWorkspace } from '../blockly/index.js';
 import { RunState, getRunState, onRunStateChange } from '../runtime/runState.js';
@@ -82,7 +83,7 @@ export function saveProgram() {
   if (!ws) return;
 
   if (ws.getAllBlocks(false).length === 0) {
-    if (!window.confirm('O espaço de trabalho está vazio. Guardar mesmo assim?')) return;
+    if (!window.confirm(t('PROGRAM_SAVE_EMPTY_CONFIRM'))) return;
   }
 
   const xml = _serialize(ws);
@@ -101,12 +102,12 @@ export function loadProgramFromFile(file) {
 
   const state = getRunState();
   if (state === RunState.RUNNING || state === RunState.PAUSED_ASYNC) {
-    if (!window.confirm('Carregar um ficheiro irá parar o programa atual. Continuar?')) return;
+    if (!window.confirm(t('PROGRAM_LOAD_RUNNING_CONFIRM'))) return;
     stopProgram();
   }
 
   if (ws.getAllBlocks(false).length > 0) {
-    if (!window.confirm('Carregar este ficheiro irá substituir o programa atual. Continuar?')) return;
+    if (!window.confirm(t('PROGRAM_LOAD_CONFIRM'))) return;
   }
 
   const reader = new FileReader();
@@ -125,7 +126,7 @@ export function loadProgramFromFile(file) {
       const wsBlockCount = ws.getAllBlocks(false).length;
 
       if (wsBlockCount < xmlBlockCount) {
-        const msg = 'Aviso: Alguns blocos do ficheiro não são suportados e foram ignorados.';
+        const msg = t('PROGRAM_UNSUPPORTED_BLOCKS');
         consoleWarn(msg);
         console.warn('[programIO]', msg);
       }
@@ -137,7 +138,7 @@ export function loadProgramFromFile(file) {
       }
     } catch (e) {
       console.error('[programIO] Load failed:', e);
-      window.alert('Ficheiro inválido ou corrompido.');
+      window.alert(t('PROGRAM_LOAD_ERROR'));
     }
   };
   reader.readAsText(file);
@@ -146,7 +147,7 @@ export function loadProgramFromFile(file) {
 export function newProgram() {
   const ws = getWorkspace();
   if (!ws) return;
-  if (!window.confirm('Apagar programa atual? Isto não pode ser desfeito.')) return;
+  if (!window.confirm(t('PROGRAM_NEW_CONFIRM'))) return;
   ws.clear();
   try {
     localStorage.removeItem(STORAGE_KEY);

@@ -1,3 +1,4 @@
+import { t } from '../i18n/index.js';
 import { generateCode } from '../codegen/index.js';
 import { createInterpreter, stepInterpreter, destroyInterpreter, isInterpreterPaused } from './interpreter.js';
 import { RunState, getRunState, setRunState, asyncTicket } from './runState.js';
@@ -23,7 +24,7 @@ export function run(workspace) {
     createInterpreter(jsCode);
   } catch (err) {
     console.error('[runLoop] Interpreter init error:', err);
-    appendConsoleMessage('Erro ao iniciar o programa: ' + err.message, 'error');
+    appendConsoleMessage(t('PROGRAM_INIT_ERROR', { error: err.message }), 'error');
     setRunState(RunState.ERRORED);
     return;
   }
@@ -51,7 +52,7 @@ export function stop() {
   resetMotors();
 
   setRunState(RunState.STOPPED);
-  appendConsoleMessage('Programa interrompido.', 'warn');
+  appendConsoleMessage(t('PROGRAM_STOPPED'), 'warn');
 }
 
 function _tick() {
@@ -74,7 +75,7 @@ function _tick() {
     asyncTicket.callback = null;
     destroyInterpreter();
     setRunState(RunState.STOPPED);
-    appendConsoleMessage('Colisão detectada.', 'error');
+    appendConsoleMessage(t('PROGRAM_COLLISION'), 'error');
     return;
   }
 
@@ -90,7 +91,7 @@ function _tick() {
       // Ticket resolved but no resume callback registered — interpreter cannot unpause.
       // Stop rather than loop forever in PAUSED_ASYNC with nothing to resolve it.
       console.error('[runLoop] asyncTicket resolved with null callback');
-      appendConsoleMessage('Erro interno: operação assíncrona sem retorno.', 'error');
+      appendConsoleMessage(t('PROGRAM_ASYNC_ERROR'), 'error');
       destroyInterpreter();
       resetMotors();
       setRunState(RunState.ERRORED);
@@ -115,7 +116,7 @@ function _tick() {
       if (!stepInterpreter()) {
         resetMotors(); // safety net: zero motors even if program had no explicit stop block
         setRunState(RunState.IDLE);
-        appendConsoleMessage('Programa terminado.', 'info');
+        appendConsoleMessage(t('PROGRAM_FINISHED'), 'info');
         destroyInterpreter();
         return;
       }
@@ -126,7 +127,7 @@ function _tick() {
     }
   } catch (err) {
     console.error('[runLoop] Runtime error:', err);
-    appendConsoleMessage('Erro de execução: ' + err.message, 'error');
+    appendConsoleMessage(t('PROGRAM_RUNTIME_ERROR', { error: err.message }), 'error');
     setRunState(RunState.ERRORED);
     destroyInterpreter();
     return;

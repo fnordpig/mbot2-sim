@@ -30,7 +30,7 @@ There is no enforced linter or formatter. Match the style of the file you're edi
 - Regular JS files (not codegen output) may use ES6+ freely — Vite bundles them.
 - No TypeScript; no JSDoc type annotations (the codebase does not use them).
 - No comments explaining *what* code does — the identifiers do that. Comments only for non-obvious *why* (hidden constraints, workarounds, deliberate quirks like gyro overshoot).
-- All user-facing strings in PT-PT via `src/i18n/pt.js`. Code comments and this document are in English.
+- Put user-facing strings in `src/i18n/messages/` for every supported locale. Preserve existing Portuguese labels. Code comments and this document are in English.
 
 ---
 
@@ -51,7 +51,7 @@ Open (or create) the appropriate file in `src/blockly/blocks/`:
 | Colour picker, RGB | `colour.js` |
 | List operations | `list.js` |
 
-Inside the file, call `Blockly.common.defineBlocks({ … })`. The block type ID **must** match Open Roberta exactly. Visual shape, dropdown options, default values, and argument order must match the XML in `reference_openroberta/`. Labels must be in PT-PT.
+Inside the file, call `Blockly.common.defineBlocks({ … })`. The block type ID **must** match Open Roberta exactly. Visual shape, dropdown options, default values, and argument order must match the XML in `reference_openroberta/`. Portuguese labels must retain the Open Roberta PT-PT wording.
 
 Example skeleton:
 ```js
@@ -79,7 +79,7 @@ Open `src/blockly/toolboxes/beginner.js` or `expert.js` (or both). Add a `{ kind
 
 ### 3. Add the PT-PT label
 
-Open `src/i18n/pt.js` and add a `Blockly.Msg.MY_BLOCK_LABEL = 'minha etiqueta'` line. All student-visible strings must be here, never hard-coded in block definitions.
+Add a `MY_BLOCK_LABEL` entry to each catalogue in `src/i18n/messages/`, using the Open Roberta PT-PT wording in `pt.js`. Block definitions use `t('MY_BLOCK_LABEL')`; never hard-code student-visible strings.
 
 ### 4. Add codegen
 
@@ -192,7 +192,7 @@ See `CLAUDE.md` Rule 9 for the reserved colour table. Do not add reserved colour
 
 ## Testing
 
-There are no automated tests. The project was validated by manual acceptance criteria at the end of each phase (see `docs/HISTORY.md`). If you want to add tests, that is welcome — there is no test framework in place, so you would need to introduce one. The most valuable test targets would be:
+Run `npm test` for the Node test runner checks. They cover language negotiation, catalogue completeness, block contracts, program preservation and failed language transactions with real Blockly serialization. Browser checks are still needed for layout and interactive controls. Additional valuable test targets include:
 
 - `src/sim/kinematics.js` — pure function, easy to unit test
 - `src/codegen/*.js` — generate code from a known workspace XML, assert the JS string
@@ -200,13 +200,15 @@ There are no automated tests. The project was validated by manual acceptance cri
 
 ---
 
-## PT-PT translations
+## Interface translations
 
-All user-facing strings live in `src/i18n/pt.js` as `Blockly.Msg.*` assignments. This file is loaded before any block definitions so the strings are available when blocks initialise. Never hard-code Portuguese text inside block definitions or UI code — always add a key to `pt.js` first.
+Application strings live in `src/i18n/messages/{pt,en,th,zh-CN,fr,de}.js`. Keep the keys and interpolation parameters identical across catalogues. Existing Portuguese Blockly overrides remain in `src/i18n/pt.js`.
 
-Internal code comments and developer console messages are in English.
+Startup uses a saved explicit language selection, otherwise the first supported entry in `navigator.languages` (or `navigator.language`), otherwise Portuguese. Regional variants match their supported base language. Chinese, Simplified Chinese and mainland/Singapore regional preferences select Simplified Chinese; explicit Traditional Chinese preferences are skipped. Invalid saved values and blocked storage do not prevent browser detection. Detection does not save a choice: only changing the selector does.
 
----
+Portuguese application and Blockly messages are bundled so startup can recover if a requested locale chunk fails to load. Changing language rebuilds the editor with its serialized program, variables, dynamic branches, viewport and undo history intact. A failed switch restores the previous language and program. Language switching is disabled while a program runs.
+
+Portuguese block labels, Open Roberta IDs, input names, dropdown values and mutation state must retain their existing meaning. Generated JavaScript and student-authored text are not translated.
 
 ## PR guidelines
 

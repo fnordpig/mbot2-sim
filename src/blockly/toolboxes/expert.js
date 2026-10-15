@@ -5,12 +5,12 @@ export const expertToolbox = {
   contents: [
     {
       kind: 'category',
-      name: 'Ação',
+      name: '%{BKY_BLOCK_ACTION}',
       colour: '20',
       contents: [
         {
           kind: 'category',
-          name: 'Movimento',
+          name: '%{BKY_BLOCK_MOVEMENT}',
           colour: '20',
           contents: [
             {
@@ -33,7 +33,7 @@ export const expertToolbox = {
         },
         {
           kind: 'category',
-          name: 'Conduzir',
+          name: '%{BKY_BLOCK_DRIVE_CONDUZIR}',
           colour: '20',
           contents: [
             {
@@ -88,7 +88,7 @@ export const expertToolbox = {
         },
         {
           kind: 'category',
-          name: 'Ecrã',
+          name: '%{BKY_BLOCK_SCREEN}',
           colour: '20',
           contents: [
             {
@@ -126,7 +126,7 @@ export const expertToolbox = {
         },
         {
           kind: 'category',
-          name: 'Som',
+          name: '%{BKY_BLOCK_SOUND_SOM}',
           colour: '20',
           contents: [
             {
@@ -151,7 +151,7 @@ export const expertToolbox = {
         },
         {
           kind: 'category',
-          name: 'Luz',
+          name: '%{BKY_BLOCK_LIGHT_LUZ}',
           colour: '20',
           contents: [
             {
@@ -190,7 +190,7 @@ export const expertToolbox = {
     },
     {
       kind: 'category',
-      name: 'Sensores',
+      name: '%{BKY_BLOCK_SENSORS}',
       colour: '200',
       contents: [
         { kind: 'block', type: 'robSensors_ultrasonic_getSample' },
@@ -212,12 +212,12 @@ export const expertToolbox = {
     },
     {
       kind: 'category',
-      name: 'Controlo',
+      name: '%{BKY_BLOCK_CONTROL}',
       colour: '120',
       contents: [
         {
           kind: 'category',
-          name: 'Decisão',
+          name: '%{BKY_BLOCK_DECISION}',
           colour: '120',
           contents: [
             { kind: 'block', type: 'robControls_if' },
@@ -226,7 +226,7 @@ export const expertToolbox = {
         },
         {
           kind: 'category',
-          name: 'Repetição',
+          name: '%{BKY_BLOCK_LOOPS}',
           colour: '120',
           contents: [
             { kind: 'block', type: 'robControls_loopForever' },
@@ -253,7 +253,7 @@ export const expertToolbox = {
         },
         {
           kind: 'category',
-          name: 'Esperar',
+          name: '%{BKY_BLOCK_WAIT_ESPERAR}',
           colour: '120',
           contents: [
             { kind: 'block', type: 'robControls_wait' },
@@ -285,7 +285,7 @@ export const expertToolbox = {
     },
     {
       kind: 'category',
-      name: 'Lógica',
+      name: '%{BKY_BLOCK_LOGIC}',
       colour: '210',
       contents: [
         { kind: 'block', type: 'logic_compare' },
@@ -298,7 +298,7 @@ export const expertToolbox = {
     },
     {
       kind: 'category',
-      name: 'Matemática',
+      name: '%{BKY_BLOCK_MATHS}',
       colour: '230',
       contents: [
         { kind: 'block', type: 'math_number' },
@@ -341,7 +341,7 @@ export const expertToolbox = {
     // TOOLBOX_NN excluded per CLAUDE.md rule 6
     {
       kind: 'category',
-      name: 'Texto',
+      name: '%{BKY_BLOCK_TEXT}',
       colour: '160',
       contents: [
         { kind: 'block', type: 'text' },
@@ -354,7 +354,7 @@ export const expertToolbox = {
     },
     {
       kind: 'category',
-      name: 'Listas',
+      name: '%{BKY_BLOCK_LISTS}',
       colour: '260',
       contents: [
         { kind: 'block', type: 'robLists_create_with' },
@@ -384,7 +384,7 @@ export const expertToolbox = {
     },
     {
       kind: 'category',
-      name: 'Cor',
+      name: '%{BKY_BLOCK_COLOUR_COR}',
       colour: '20',
       contents: [
         { kind: 'block', type: 'robColour_picker', fields: { COLOUR: '#cc0000' } },
@@ -407,11 +407,11 @@ export const expertToolbox = {
         },
       ],
     },
-    { kind: 'category', name: 'Variáveis', custom: 'VARIABLE', colour: '330' },
-    { kind: 'category', name: 'Funções',   custom: 'PROCEDURE', colour: '290' },
+    { kind: 'category', name: '%{BKY_BLOCK_VARIABLES}', custom: 'VARIABLE', colour: '330' },
+    { kind: 'category', name: '%{BKY_BLOCK_FUNCTIONS}',   custom: 'PROCEDURE', colour: '290' },
     {
       kind: 'category',
-      name: 'Comunicação',
+      name: '%{BKY_BLOCK_COMMUNICATION}',
       colour: '0',
       contents: [
         {

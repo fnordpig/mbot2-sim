@@ -9,7 +9,7 @@ A browser-based digital twin of the **Makeblock mBot 2 (CyberPi)** with a drag-a
 
 ## What it is
 
-A static, client-side web application that gives Portuguese-speaking robotics classrooms a sandboxed environment to test mBot 2 programs before deploying to hardware. The block editor is visually and structurally compatible with Open Roberta Lab's mBot 2 toolbox (Beginner + Expert levels, all in PT-PT). Programs execute inside [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter) against a 2D physics simulation with differential-drive kinematics, ultrasonic raycasting, quad-RGB colour sensing, and PNG-based arena maps.
+A static, client-side web application that gives Portuguese-speaking robotics classrooms a sandboxed environment to test mBot 2 programs before deploying to hardware. The block editor is visually and structurally compatible with Open Roberta Lab's mBot 2 toolbox (Beginner + Expert levels, with Portuguese labels preserved). Programs execute inside [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter) against a 2D physics simulation with differential-drive kinematics, ultrasonic raycasting, quad-RGB colour sensing, and PNG-based arena maps.
 
 ## What it is NOT
 
@@ -114,7 +114,7 @@ mbot2-sim/
 │   ├── runtime/        JS-Interpreter lifecycle, async ticketing, sandbox injection
 │   ├── sim/            Physics simulation: kinematics, map, sensors, robot state, LEDs
 │   ├── ui/             DOM panels: console, display overlay, buttons, map selector
-│   └── i18n/           PT-PT Blockly message overrides
+│   └── i18n/           Interface catalogues and Blockly locale overrides
 ├── docs/               Contributor and operator documentation
 ├── reference_openroberta/  Upstream XML and context files (source of truth for block fidelity)
 ├── scripts/            Build-time utilities (e.g. map generation)
@@ -155,3 +155,7 @@ MIT. See [LICENSE](LICENSE).
 - **[Makeblock](https://www.makeblock.com/)** — mBot 2 / CyberPi hardware reference: wheel geometry, track width, motor RPM range, sensor specifications.
 - **[Blockly](https://developers.google.com/blockly)** — the block programming framework this editor is built on.
 - **[JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter)** (Neil Fraser) — the sandboxed, steppable JavaScript interpreter that executes generated programs.
+
+## Interface languages
+
+Portuguese, English, Thai, Simplified Chinese, French and German are available in the language selector. The simulator uses your saved selection first, then your browser’s preferred supported language, with Portuguese as the fallback. Switching language preserves your program and student-entered text.
