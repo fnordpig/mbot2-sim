@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Blockly from 'blockly';
-import { languages, loadLanguage, getLanguage, getSavedLanguage, saveLanguage, t } from '../src/i18n/index.js';
+import { matchLanguage, languages, loadLanguage, getLanguage, getSavedLanguage, saveLanguage, t } from '../src/i18n/index.js';
 import { registerActionBlocks } from '../src/blockly/blocks/action.js';
 import { registerSensorBlocks } from '../src/blockly/blocks/sensor.js';
 import { registerControlBlocks } from '../src/blockly/blocks/control.js';
@@ -45,27 +45,44 @@ test('all languages cover the English messages and preserve interpolation parame
   }
 });
 
-test('English is the default and unavailable storage does not prevent translation', async () => {
+test('English is bundled as the default locale', async () => {
   assert.equal(getLanguage(), 'en');
-  assert.equal(getSavedLanguage(), 'en');
+  assert.equal(getSavedLanguage({ languages: ['ja', 'es'] }), 'en');
   await loadLanguage('unsupported');
   assert.equal(getLanguage(), 'en');
   assert.equal(t('PROGRAM_RUNTIME_ERROR', { error: 'example' }), 'Runtime error: example');
   assert.doesNotThrow(saveLanguage);
-  let saved;
-  globalThis.localStorage = {
-    getItem: () => saved,
-    setItem: (_, value) => { saved = value; },
-  };
+});
+
+test('browser preferences negotiate supported regional variants in order', () => {
+  for (const [input, expected] of [['en-US', 'en'], ['pt-BR', 'pt'], ['fr-CA', 'fr'], ['de-AT', 'de'], ['th-TH', 'th'], ['zh', 'zh-CN'], ['zh-CN', 'zh-CN'], ['zh-SG', 'zh-CN'], ['zh-Hans', 'zh-CN'], ['ZH-hans-CN', 'zh-CN']]) {
+    assert.equal(matchLanguage(input), expected, input);
+  }
+  for (const input of ['zh-Hant', 'zh-TW', 'zh-HK', 'zh-MO', 'zh-Hant-CN', 'ja', '', null]) assert.equal(matchLanguage(input), null, input);
+  assert.equal(getSavedLanguage({ languages: ['ja', 'fr-CA', 'en-US'] }), 'fr');
+  assert.equal(getSavedLanguage({ languages: ['zh-TW', 'de-DE'] }), 'de');
+  assert.equal(getSavedLanguage({ languages: [], language: 'th-TH' }), 'th');
+  assert.equal(getSavedLanguage({}), 'en');
+});
+
+test('saved choices override browser preferences and invalid or blocked storage falls through', async () => {
+  let saved = 'de';
+  globalThis.localStorage = { getItem: () => saved, setItem: (_, value) => { saved = value; } };
   try {
-    assert.equal(getSavedLanguage(), 'en');
-    await loadLanguage('th');
-    saveLanguage();
-    assert.equal(getSavedLanguage(), 'th');
+    assert.equal(getSavedLanguage({ languages: ['fr'] }), 'de');
     saved = 'invalid';
-    assert.equal(getSavedLanguage(), 'en');
+    assert.equal(getSavedLanguage({ languages: ['fr'] }), 'fr');
+    saved = null;
+    assert.equal(getSavedLanguage({ languages: ['th'] }), 'th');
+    await loadLanguage('en');
+    saveLanguage();
+    assert.equal(saved, 'en');
+    assert.equal(getSavedLanguage({ languages: ['pt'] }), 'en');
+    Object.defineProperty(globalThis, 'localStorage', { configurable: true, get() { throw new Error('blocked'); } });
+    assert.equal(getSavedLanguage({ languages: ['zh-Hans'] }), 'zh-CN');
+    assert.doesNotThrow(saveLanguage);
   } finally {
-    delete globalThis.localStorage;
+    Object.defineProperty(globalThis, 'localStorage', { configurable: true, writable: true, value: undefined });
     await loadLanguage('en');
   }
 });

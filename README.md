@@ -9,7 +9,7 @@ A browser-based digital twin of the **Makeblock mBot 2 (CyberPi)** with a drag-a
 
 ## What it is
 
-A static, client-side web application that gives robotics classrooms a sandboxed environment to test mBot 2 programs before deploying to hardware. English is the default; use the Language selector for Portuguese (PT-PT), Thai, Simplified Chinese, French, or German. The block editor is visually and structurally compatible with Open Roberta Lab's mBot 2 toolbox (Beginner + Expert levels). Programs execute inside [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter) against a 2D physics simulation with differential-drive kinematics, ultrasonic raycasting, quad-RGB colour sensing, and PNG-based arena maps.
+A static, client-side web application that gives robotics classrooms a sandboxed environment to test mBot 2 programs before deploying to hardware. The interface follows your browser’s preferred supported language until you choose one in the Language selector. Portuguese (PT-PT), English, Thai, Simplified Chinese, French and German are supported, with English as the fallback. The block editor is visually and structurally compatible with Open Roberta Lab's mBot 2 toolbox (Beginner + Expert levels). Programs execute inside [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter) against a 2D physics simulation with differential-drive kinematics, ultrasonic raycasting, quad-RGB colour sensing, and PNG-based arena maps.
 
 ## What it is NOT
 
@@ -48,7 +48,7 @@ npm ci
 npm run dev          # dev server at http://localhost:5173
 ```
 
-The language selector updates menus, custom blocks, tooltips, and application messages without changing the program. The selected language is remembered on this browser when local storage is available. Language switching is disabled while a program runs. Map filenames and text entered by students retain their original spelling.
+The language selector updates menus, custom blocks, tooltips, and application messages without changing the program. An explicit selection is remembered on this browser when local storage is available. Otherwise startup uses the first supported browser preference, matching regional variants such as fr-CA to French. Unsupported preferences fall back to English. Language switching is disabled while a program runs. Map filenames and text entered by students retain their original spelling.
 
 Run `npm test` for regression checks before `npm run build` and browser testing.
 

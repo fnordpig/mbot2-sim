@@ -101,7 +101,7 @@ Colour matching uses ±40 RGB Euclidean distance tolerance. Source: `src/sim/map
 
 ## 11. UI Language
 
-- **English is the default student-facing language.** Also support Portuguese (PT-PT), Thai, Simplified Chinese, French, and German. Sources: `src/i18n/messages/` plus the matching official Blockly locale. Keep every catalogue's keys and interpolation placeholders aligned with English.
+- **Use a saved explicit language choice, then the first supported browser preference, then English as the fallback.** Also support Portuguese (PT-PT), Thai, Simplified Chinese, French, and German. Sources: `src/i18n/messages/` plus the matching official Blockly locale. Keep every catalogue's keys and interpolation placeholders aligned with English.
 - **Code comments + docs in English.**
 - Console/error messages shown to students use the selected language through `t()` from `src/i18n/index.js`.
 - Console/error messages for developers (DevTools): English is fine.

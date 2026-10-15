@@ -2,6 +2,7 @@ import english from './messages/en.js';
 import * as EnglishBlockly from 'blockly/msg/en';
 import { ptMessages } from './pt.js';
 
+export const DEFAULT_LANGUAGE = 'en';
 export const LANGUAGE_STORAGE_KEY = 'mbot2sim:language';
 export const languages = [
   { code: 'en', name: 'English', htmlLang: 'en' },
@@ -38,15 +39,34 @@ function languageState(code, catalogue, blockly) {
 let activeLanguage = languageState('en', english, EnglishBlockly);
 
 export function resolveLanguage(code) {
-  return languages.some(item => item.code === code) ? code : 'en';
+  return languages.some(item => item.code === code) ? code : DEFAULT_LANGUAGE;
 }
 
 export function getLanguage() { return activeLanguage.code; }
 export function getActiveLanguage() { return activeLanguage; }
 
-export function getSavedLanguage() {
-  try { return resolveLanguage(localStorage.getItem(LANGUAGE_STORAGE_KEY)); }
-  catch (_) { return 'en'; }
+export function matchLanguage(code) {
+  if (typeof code !== 'string') return null;
+  const parts = code.toLowerCase().split('-');
+  if (parts[0] === 'zh') {
+    // Explicit Traditional Chinese preferences must not select Simplified Chinese.
+    if (parts.includes('hant') || parts.includes('tw') || parts.includes('hk') || parts.includes('mo')) return null;
+    return parts.length === 1 || parts[1] === 'hans' || parts[1] === 'cn' || parts[1] === 'sg' ? 'zh-CN' : null;
+  }
+  return languages.find(item => item.code === parts[0])?.code ?? null;
+}
+
+export function getSavedLanguage(browser = globalThis.navigator) {
+  try {
+    const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (languages.some(item => item.code === saved)) return saved;
+  } catch (_) { /* Browser preferences also work when storage is unavailable. */ }
+  const preferences = browser?.languages?.length ? browser.languages : [browser?.language];
+  for (const preference of preferences) {
+    const matched = matchLanguage(preference);
+    if (matched) return matched;
+  }
+  return DEFAULT_LANGUAGE;
 }
 
 export function saveLanguage() {

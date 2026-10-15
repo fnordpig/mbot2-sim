@@ -30,7 +30,7 @@ There is no enforced linter or formatter. Match the style of the file you're edi
 - Regular JS files (not codegen output) may use ES6+ freely — Vite bundles them.
 - No TypeScript; no JSDoc type annotations (the codebase does not use them).
 - No comments explaining *what* code does — the identifiers do that. Comments only for non-obvious *why* (hidden constraints, workarounds, deliberate quirks like gyro overshoot).
-- All user-facing strings use `t()` and the six catalogues in `src/i18n/messages/`. English is the default. Code comments and this document are in English.
+- All user-facing strings use `t()` and the six catalogues in `src/i18n/messages/`. Startup prefers a saved explicit choice, then supported browser preferences, with English as the fallback. Code comments and this document are in English.
 
 ---
 
@@ -208,13 +208,13 @@ The project also uses manual acceptance criteria (see `docs/HISTORY.md`). Additi
 
 ## Interface translations
 
-`src/i18n/index.js` loads the selected catalogue and official Blockly locale. English is the first-visit default and fallback. `src/i18n/pt.js` retains the existing PT-PT overrides for standard Blockly messages. Custom messages live in `src/i18n/messages/`; each locale must contain the same keys and `{placeholder}` names as English.
+`src/i18n/index.js` loads the selected catalogue and official Blockly locale. Startup uses a saved explicit choice first, otherwise the first supported entry in `navigator.languages` (or `navigator.language`), otherwise English. Regional variants match the supported base language. Chinese, Simplified Chinese and mainland/Singapore regional preferences select Simplified Chinese; explicit Traditional Chinese preferences are skipped. Invalid saved values and blocked storage fall through to browser preferences. Detection does not save a choice: only changing the selector does. `src/i18n/pt.js` retains the existing PT-PT overrides for standard Blockly messages. Custom messages live in `src/i18n/messages/`; each locale must contain the same keys and `{placeholder}` names as English.
 
 Use `t('MESSAGE_KEY', { name: value })` for application messages. HTML labels declare `data-i18n`, `data-i18n-title`, or `data-i18n-label`. Do not translate block type IDs, input names, dropdown values, student text, variable names, or map filenames. Locale files load on demand. Switching languages reconstructs blocks from Blockly's serialized workspace so their labels refresh while connections, values, variables, and mutator state survive.
 
 Run `npm test` to check catalogue coverage and program invariance across languages. In the browser, switch languages with a nonempty workspace, reload to check persistence, and run the same program in each language.
 
-Language preparation must leave the active locale unchanged until the workspace snapshot succeeds. A failed rebuild restores the previous locale, program, and Blockly event flags. Startup falls back to bundled English if the saved locale's files cannot load. For browser failure checks, block the selected locale's asset requests and verify that the editor, saved program, maps, and controls still initialize. Also check startup with storage access denied; file import and editing must remain usable.
+Language preparation must leave the active locale unchanged until the workspace snapshot succeeds. A failed rebuild restores the previous locale, program, and Blockly event flags. Startup falls back to bundled English if the preferred locale's files cannot load. For browser failure checks, block the selected locale's asset requests and verify that the editor, saved program, maps, and controls still initialize. Also check startup with storage access denied; file import and editing must remain usable.
 
 Internal code comments and developer console messages are in English.
 
