@@ -194,6 +194,8 @@ See `CLAUDE.md` Rule 9 for the reserved colour table. Do not add reserved colour
 
 Run `npm test` for the automated regression checks, using Node's built-in test runner. Runtime checks exercise the actual Blockly generator and JS-Interpreter with a controlled animation-frame scheduler. Add a regression that fails before each behavioral fix, then verify the browser workflow described in the PR template. Run `npm run build` before submitting a PR.
 
+Editor regressions use real headless Blockly workspaces to check rejected imports, rollback, undo history, autosave timing, and language switching. Browser boundaries (file reading, storage, editor mounting, and keyboard events) are supplied by the tests; no additional test dependencies are required. Runtime tests also check audio cancellation on Stop, collision, and errors.
+
 The project also uses manual acceptance criteria (see `docs/HISTORY.md`). Additional valuable test targets include:
 
 - `src/sim/kinematics.js` — pure function, easy to unit test
@@ -209,6 +211,8 @@ The project also uses manual acceptance criteria (see `docs/HISTORY.md`). Additi
 Use `t('MESSAGE_KEY', { name: value })` for application messages. HTML labels declare `data-i18n`, `data-i18n-title`, or `data-i18n-label`. Do not translate block type IDs, input names, dropdown values, student text, variable names, or map filenames. Locale files load on demand. Switching languages reconstructs blocks from Blockly's serialized workspace so their labels refresh while connections, values, variables, and mutator state survive.
 
 Run `npm test` to check catalogue coverage and program invariance across languages. In the browser, switch languages with a nonempty workspace, reload to check persistence, and run the same program in each language.
+
+Language preparation must leave the active locale unchanged until the workspace snapshot succeeds. A failed rebuild restores the previous locale, program, and Blockly event flags. Startup falls back to bundled English if the saved locale's files cannot load. For browser failure checks, block the selected locale's asset requests and verify that the editor, saved program, maps, and controls still initialize. Also check startup with storage access denied; file import and editing must remain usable.
 
 Internal code comments and developer console messages are in English.
 
