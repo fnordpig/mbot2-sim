@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'node:url';
+
+const browserVm = fileURLToPath(new URL('./src/runtime/browserVm.json', import.meta.url));
 
 function mapCataloguePlugin() {
   function writeCatalogue(root) {
@@ -32,13 +35,13 @@ export default defineConfig({
   root: '.',
   publicDir: 'public',
   server: { port: 5173, open: true },
-  // JS-Interpreter catches a missing require('vm') when Web Workers are absent.
-  // Preserve that optional fallback instead of substituting a truthy browser stub.
-  optimizeDeps: { esbuildOptions: { external: ['vm'] } },
+  // A throwing require poisons JS-Interpreter's internal module cache with {}.
+  // JSON gives both the dev optimizer and production bundler a stable null value.
+  resolve: { alias: [{ find: /^(?:node:)?vm$/, replacement: browserVm }] },
   build: {
     outDir: 'dist',
     sourcemap: true,
-    commonjsOptions: { ignore: ['vm'] },
+    commonjsOptions: { requireReturnsDefault: id => id === browserVm },
     // Blockly's upstream editor is one indivisible module (~558 kB minified).
     chunkSizeWarningLimit: 600,
     rollupOptions: {

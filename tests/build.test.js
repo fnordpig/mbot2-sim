@@ -4,6 +4,8 @@ import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { resolveObjectURL } from 'node:buffer';
+import { runInNewContext } from 'node:vm';
 import { build, createLogger } from 'vite';
 
 let output;
@@ -44,7 +46,7 @@ test('production builds without warnings and keeps application and vendor chunks
   }
 });
 
-test('the built browser interpreter runs ES5 and rejects unavailable RegExp isolation safely', async () => {
+test('the built browser interpreter survives repeated missing Workers and later uses an available Worker', async () => {
   const chunk = output.find(item => item.type === 'chunk' && item.name === 'interpreter');
   assert.ok(chunk, 'interpreter must be independently loadable');
   const module = await import(pathToFileURL(path.join(directory, chunk.fileName)).href);
@@ -56,10 +58,36 @@ test('the built browser interpreter runs ES5 and rejects unavailable RegExp isol
 
   // A browser without Workers must not treat a Node stub as an isolation API.
   const workerDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'Worker');
-  Object.defineProperty(globalThis, 'Worker', { configurable: true, value: undefined });
+  Object.defineProperty(globalThis, 'Worker', { configurable: true, writable: true, value: undefined });
   try {
-    const regex = new Interpreter("var result = 'hello'.match(/ell/);");
-    assert.throws(() => { while (regex.step()) {} }, /Regular expressions not supported/);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const regex = new Interpreter("var result = 'hello'.match(/ell/);");
+      assert.throws(() => { while (regex.step()) {} }, /Regular expressions not supported/);
+      assert.equal(Interpreter.vm, null);
+    }
+
+    let workerCount = 0;
+    // Execute the dependency's actual worker script; only browser message delivery
+    // is replaced. A cached fake VM must not bypass this path on a later run.
+    globalThis.Worker = class {
+      constructor(url) {
+        workerCount++;
+        this.ready = resolveObjectURL(url).text().then(code => {
+          URL.revokeObjectURL(url);
+          this.scope = { postMessage: data => this.onmessage({ data }), close() {} };
+          runInNewContext(code, this.scope);
+        });
+      }
+      postMessage(data) { this.ready.then(() => this.scope.onmessage({ data })); }
+      terminate() {}
+    };
+    const regex = new Interpreter("var result = 'hello'.match(/ell/)[0];");
+    for (let steps = 0; regex.step(); steps++) {
+      assert.ok(steps < 10_000, 'RegExp worker did not finish');
+      if (regex.paused_) await new Promise(resolve => setImmediate(resolve));
+    }
+    assert.equal(regex.getProperty(regex.globalObject, 'result'), 'ell');
+    assert.equal(workerCount, 1);
     assert.equal(Interpreter.vm, null);
   } finally {
     if (workerDescriptor) Object.defineProperty(globalThis, 'Worker', workerDescriptor);
