@@ -196,6 +196,8 @@ Run `npm test` for the automated regression checks, using Node's built-in test r
 
 Editor regressions use real headless Blockly workspaces to check rejected imports, rollback, undo history, autosave timing, and language switching. Browser boundaries (file reading, storage, editor mounting, and keyboard events) are supplied by the tests; no additional test dependencies are required. Runtime tests also check audio cancellation on Stop, collision, and errors.
 
+Build regressions run the production bundler, reject warnings and unsupported Node-module stubs, and execute the bundled interpreter. The application entry has a 200 kB budget. Blockly's upstream editor is a single module with a 600 kB budget; every other chunk has a 500 kB budget. Keep the editor, standard blocks, JavaScript generator, and interpreter in separate chunks. The browser build leaves JS-Interpreter's optional `vm` require untouched so its existing catch handles missing Web Workers; it must not receive a fake Node VM implementation.
+
 The project also uses manual acceptance criteria (see `docs/HISTORY.md`). Additional valuable test targets include:
 
 - `src/sim/kinematics.js` — pure function, easy to unit test
