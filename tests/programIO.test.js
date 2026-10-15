@@ -189,6 +189,24 @@ test('quota and removal failures keep editing and New usable', () => {
   } finally { f.dispose(); }
 });
 
+for (const flush of ['debounce', 'pagehide']) {
+  test(`New followed by immediate Undo persists the restored program on ${flush}`, async () => {
+    const f = fixture();
+    try {
+      f.init();
+      const before = serialize(f.ws);
+      newProgram(f.ws);
+      assert.equal(f.data.has(STORAGE_KEY), false);
+      await wait(10);
+      f.ws.undo(false);
+      assert.equal(serialize(f.ws), before);
+      if (flush === 'pagehide') f.window.dispatchEvent(new Event('pagehide'));
+      else await wait(600);
+      assert.equal(f.data.get(STORAGE_KEY), before);
+    } finally { f.dispose(); }
+  });
+}
+
 test('Run flushes pending edits; completion and pagehide save the latest workspace', async () => {
   const f = fixture();
   try {

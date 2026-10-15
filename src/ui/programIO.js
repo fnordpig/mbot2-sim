@@ -188,5 +188,6 @@ export function newProgram(ws = getWorkspace()) {
   ws.clear();
   try {
     localStorage.removeItem(STORAGE_KEY);
+    _lastSerialized = null;
   } catch (e) {}
 }
