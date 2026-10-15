@@ -5,6 +5,25 @@ import { run as runProgram, stop as stopProgram } from '../runtime/runLoop.js';
 import { RunState, getRunState, onRunStateChange } from '../runtime/runState.js';
 import { saveProgram, loadProgramFromFile, newProgram } from './programIO.js';
 
+const INTERACTIVE_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT', 'OPTION', 'BUTTON', 'A', 'SUMMARY', 'LABEL']);
+const INTERACTIVE_ROLES = new Set([
+  'button', 'link', 'checkbox', 'radio', 'switch', 'combobox', 'listbox',
+  'option', 'menu', 'menubar', 'menuitem', 'menuitemcheckbox', 'menuitemradio',
+  'slider', 'spinbutton', 'textbox', 'searchbox', 'tab', 'tablist',
+  'tree', 'treeitem', 'grid', 'gridcell',
+]);
+
+function isInteractiveTarget(target) {
+  for (let element = target; element; element = element.parentElement) {
+    if (INTERACTIVE_TAGS.has(element.tagName?.toUpperCase()) || element.isContentEditable) return true;
+    const editable = element.getAttribute?.('contenteditable');
+    if (editable !== null && editable !== undefined && editable !== 'false') return true;
+    const roles = element.getAttribute?.('role')?.split(/\s+/) || [];
+    if (roles.some(role => INTERACTIVE_ROLES.has(role))) return true;
+  }
+  return false;
+}
+
 export function initControls() {
   const btnRun    = document.getElementById('btn-run');
   const btnStop   = document.getElementById('btn-stop');
@@ -52,12 +71,12 @@ export function initControls() {
   btnNew.addEventListener('click', () => newProgram());
 
   document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
-      const s = getRunState();
-      if (s === RunState.RUNNING || s === RunState.PAUSED_ASYNC) return;
-      e.preventDefault();
-      if (isPaused()) resumeSim(); else pauseSim();
-    }
+    if (e.code !== 'Space' || e.defaultPrevented || e.isComposing || e.repeat ||
+        e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || isInteractiveTarget(e.target)) return;
+    const state = getRunState();
+    if (state === RunState.RUNNING || state === RunState.PAUSED_ASYNC) return;
+    e.preventDefault();
+    if (isPaused()) resumeSim(); else pauseSim();
   });
 
   const toolboxSelect = document.getElementById('toolbox-mode');
