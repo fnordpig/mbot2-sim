@@ -16,12 +16,12 @@ export function run(workspace) {
 
   clearConsole();
 
-  const jsCode = generateCode(workspace);
-  console.log('--- Generated JS ---\n' + jsCode + '\n--- End Generated JS ---');
-
   try {
+    const jsCode = generateCode(workspace);
+    console.log('--- Generated JS ---\n' + jsCode + '\n--- End Generated JS ---');
     createInterpreter(jsCode);
   } catch (err) {
+    clearExecution();
     console.error('[runLoop] Interpreter init error:', err);
     appendConsoleMessage('Erro ao iniciar o programa: ' + err.message, 'error');
     setRunState(RunState.ERRORED);
@@ -38,6 +38,12 @@ export function stop() {
   const state = getRunState();
   if (state === RunState.IDLE || state === RunState.STOPPED) return;
 
+  clearExecution();
+  setRunState(RunState.STOPPED);
+  appendConsoleMessage('Programa interrompido.', 'warn');
+}
+
+function clearExecution() {
   if (_rafId !== null) {
     cancelAnimationFrame(_rafId);
     _rafId = null;
@@ -49,14 +55,21 @@ export function stop() {
   asyncTicket.resolveCondition = null;
   asyncTicket.callback = null;
   resetMotors();
-
-  setRunState(RunState.STOPPED);
-  appendConsoleMessage('Programa interrompido.', 'warn');
 }
 
 function _tick() {
   _rafId = null;
+  try {
+    advanceInterpreter();
+  } catch (err) {
+    clearExecution();
+    console.error('[runLoop] Runtime error:', err);
+    appendConsoleMessage('Erro de execução: ' + err.message, 'error');
+    setRunState(RunState.ERRORED);
+  }
+}
 
+function advanceInterpreter() {
   if (getRunState() !== RunState.RUNNING && getRunState() !== RunState.PAUSED_ASYNC) return;
 
   // Clear per-tick sensor cache so sensors compute once per frame, not per loop iteration
@@ -68,11 +81,7 @@ function _tick() {
 
   // Magenta collision → halt the program cleanly (not an error, an expected obstacle hit)
   if (isMagentaCollision(robot.x, robot.y, ROBOT_CONSTANTS.BODY_RADIUS_CM)) {
-    resetMotors();
-    asyncTicket.pending = false;
-    asyncTicket.resolveCondition = null;
-    asyncTicket.callback = null;
-    destroyInterpreter();
+    clearExecution();
     setRunState(RunState.STOPPED);
     appendConsoleMessage('Colisão detectada.', 'error');
     return;
@@ -91,8 +100,7 @@ function _tick() {
       // Stop rather than loop forever in PAUSED_ASYNC with nothing to resolve it.
       console.error('[runLoop] asyncTicket resolved with null callback');
       appendConsoleMessage('Erro interno: operação assíncrona sem retorno.', 'error');
-      destroyInterpreter();
-      resetMotors();
+      clearExecution();
       setRunState(RunState.ERRORED);
       return;
     }
@@ -110,26 +118,17 @@ function _tick() {
     setRunState(RunState.RUNNING);
   }
 
-  try {
-    for (let i = 0; i < STEP_BUDGET_PER_FRAME; i++) {
-      if (!stepInterpreter()) {
-        resetMotors(); // safety net: zero motors even if program had no explicit stop block
-        setRunState(RunState.IDLE);
-        appendConsoleMessage('Programa terminado.', 'info');
-        destroyInterpreter();
-        return;
-      }
-      if (isInterpreterPaused()) {
-        setRunState(RunState.PAUSED_ASYNC);
-        break;
-      }
+  for (let i = 0; i < STEP_BUDGET_PER_FRAME; i++) {
+    if (!stepInterpreter()) {
+      clearExecution();
+      setRunState(RunState.IDLE);
+      appendConsoleMessage('Programa terminado.', 'info');
+      return;
     }
-  } catch (err) {
-    console.error('[runLoop] Runtime error:', err);
-    appendConsoleMessage('Erro de execução: ' + err.message, 'error');
-    setRunState(RunState.ERRORED);
-    destroyInterpreter();
-    return;
+    if (isInterpreterPaused()) {
+      setRunState(RunState.PAUSED_ASYNC);
+      break;
+    }
   }
 
   const current = getRunState();

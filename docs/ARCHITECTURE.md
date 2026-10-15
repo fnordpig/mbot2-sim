@@ -111,9 +111,9 @@ When a user drags a block and clicks Run, this is the complete path:
 3. **Workspace → JS string** (`src/codegen/`)
    `generateCode(workspace)` (from `src/codegen/index.js`) calls Blockly's `javascriptGenerator.workspaceToCode(workspace)`. Each block type has a registered generator function (e.g. `javascriptGenerator.forBlock['robActions_motorDiff_on_for']`) that emits a JS fragment like:
    ```js
-   robotAPI.drive_for('FORWARD', 30, 50, callback_0);
+   robotAPI.drive_for('FORWARD', 30, 50);
    ```
-   Async blocks use `createJsAsyncWrapper` (from `builtin.js`) to emit the JS-Interpreter async calling convention.
+   Async blocks emit ordinary calls. `sandbox.js` injects methods marked `._async` through `createAsyncFunction`, which supplies the native completion callback.
 
 4. **JS-Interpreter execution** (`src/runtime/`)
    `src/runtime/runLoop.js` creates a new `Interpreter` instance with the generated code string, then drives it with up to `STEP_BUDGET_PER_FRAME = 1000` `step()` calls per RAF frame.
