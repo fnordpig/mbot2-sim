@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'node:url';
+
+const browserVm = fileURLToPath(new URL('./src/runtime/browserVm.json', import.meta.url));
 
 function mapCataloguePlugin() {
   function writeCatalogue(root) {
@@ -32,6 +35,25 @@ export default defineConfig({
   root: '.',
   publicDir: 'public',
   server: { port: 5173, open: true },
-  build: { outDir: 'dist', sourcemap: true },
+  // A throwing require poisons JS-Interpreter's internal module cache with {}.
+  // JSON gives both the dev optimizer and production bundler a stable null value.
+  resolve: { alias: [{ find: /^(?:node:)?vm$/, replacement: browserVm }] },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    commonjsOptions: { requireReturnsDefault: id => id === browserVm },
+    // Blockly's upstream editor is one indivisible module (~558 kB minified).
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('/node_modules/js-interpreter/')) return 'interpreter';
+          if (id.includes('/node_modules/blockly/blockly_compressed.js')) return 'blockly-core';
+          if (id.includes('/node_modules/blockly/blocks_compressed.js')) return 'blockly-blocks';
+          if (id.includes('/node_modules/blockly/javascript_compressed.js')) return 'blockly-javascript';
+        },
+      },
+    },
+  },
   plugins: [mapCataloguePlugin()],
 });
