@@ -19,5 +19,6 @@
 - [ ] `npm run build` passes
 - [ ] Block type ID matches Open Roberta exactly (if adding a block)
 - [ ] `BLOCK_MAPPING.md` updated (if adding a block)
-- [ ] PT-PT label added to `src/i18n/pt.js` (if adding student-facing text)
+- [ ] Translations added to all six `src/i18n/messages/` catalogues (if adding student-facing text)
+- [ ] `npm test` passes
 - [ ] No ES6+ syntax in generated code (no `let`, `const`, arrow functions, etc.)

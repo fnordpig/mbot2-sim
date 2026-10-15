@@ -1,3 +1,4 @@
+import { t } from '../../i18n/index.js';
 import * as Blockly from 'blockly';
 
 export function registerActionBlocks() {
@@ -6,19 +7,19 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_motorDiff_on'] = {
     init() {
       this.appendDummyInput()
-        .appendField('conduzir')
+        .appendField(t('BLOCK_DRIVE'))
         .appendField(new Blockly.FieldDropdown([
-          ['para a frente', 'FOREWARD'],
-          ['para trás',     'BACKWARD'],
+          [t('BLOCK_FORWARD'), 'FOREWARD'],
+          [t('BLOCK_BACKWARD'),     'BACKWARD'],
         ]), 'DIRECTION')
-        .appendField('com velocidade');
+        .appendField(t('BLOCK_AT_SPEED'));
       this.appendValueInput('POWER').setCheck('Number');
       this.appendDummyInput().appendField('%');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Conduzir o robô numa direção a uma velocidade.');
+      this.setTooltip(t('BLOCK_DRIVE_THE_ROBOT_IN_A_DIRECTION_AT_A_SPEED'));
       this.setHelpUrl('');
     },
   };
@@ -26,33 +27,33 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_motorDiff_on_for'] = {
     init() {
       this.appendDummyInput()
-        .appendField('conduzir')
+        .appendField(t('BLOCK_DRIVE'))
         .appendField(new Blockly.FieldDropdown([
-          ['para a frente', 'FOREWARD'],
-          ['para trás',     'BACKWARD'],
+          [t('BLOCK_FORWARD'), 'FOREWARD'],
+          [t('BLOCK_BACKWARD'),     'BACKWARD'],
         ]), 'DIRECTION')
-        .appendField('com velocidade');
+        .appendField(t('BLOCK_AT_SPEED'));
       this.appendValueInput('POWER').setCheck('Number');
-      this.appendDummyInput().appendField('% por uma distância');
+      this.appendDummyInput().appendField(t('BLOCK_FOR_A_DISTANCE'));
       this.appendValueInput('DISTANCE').setCheck('Number');
       this.appendDummyInput().appendField('cm');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Conduzir o robô numa direção a uma velocidade por uma distância.');
+      this.setTooltip(t('BLOCK_DRIVE_THE_ROBOT_IN_A_DIRECTION_AT_A_SPEED_FOR_A_DISTANCE'));
       this.setHelpUrl('');
     },
   };
 
   Blockly.Blocks['robActions_motorDiff_stop'] = {
     init() {
-      this.appendDummyInput().appendField('parar de conduzir');
+      this.appendDummyInput().appendField(t('BLOCK_STOP_DRIVING'));
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Parar os motores de condução.');
+      this.setTooltip(t('BLOCK_STOP_THE_DRIVE_MOTORS'));
       this.setHelpUrl('');
     },
   };
@@ -60,19 +61,19 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_motorDiff_turn'] = {
     init() {
       this.appendDummyInput()
-        .appendField('virar')
+        .appendField(t('BLOCK_TURN'))
         .appendField(new Blockly.FieldDropdown([
-          ['à esquerda', 'LEFT'],
-          ['à direita',  'RIGHT'],
+          [t('BLOCK_TO_THE_LEFT'), 'LEFT'],
+          [t('BLOCK_TO_THE_RIGHT'),  'RIGHT'],
         ]), 'DIRECTION')
-        .appendField('com velocidade');
+        .appendField(t('BLOCK_AT_SPEED'));
       this.appendValueInput('POWER').setCheck('Number');
       this.appendDummyInput().appendField('%');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Virar o robô continuamente a uma velocidade.');
+      this.setTooltip(t('BLOCK_TURN_THE_ROBOT_CONTINUOUSLY_AT_A_SPEED'));
       this.setHelpUrl('');
     },
   };
@@ -80,21 +81,21 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_motorDiff_turn_for'] = {
     init() {
       this.appendDummyInput()
-        .appendField('virar')
+        .appendField(t('BLOCK_TURN'))
         .appendField(new Blockly.FieldDropdown([
-          ['à esquerda', 'LEFT'],
-          ['à direita',  'RIGHT'],
+          [t('BLOCK_TO_THE_LEFT'), 'LEFT'],
+          [t('BLOCK_TO_THE_RIGHT'),  'RIGHT'],
         ]), 'DIRECTION')
-        .appendField('com velocidade');
+        .appendField(t('BLOCK_AT_SPEED'));
       this.appendValueInput('POWER').setCheck('Number');
-      this.appendDummyInput().appendField('% por');
+      this.appendDummyInput().appendField(t('BLOCK_FOR'));
       this.appendValueInput('DEGREE').setCheck('Number');
       this.appendDummyInput().appendField('°');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Virar o robô numa direção a uma velocidade por um ângulo.');
+      this.setTooltip(t('BLOCK_TURN_THE_ROBOT_IN_A_DIRECTION_AT_A_SPEED_THROUGH_AN_ANGLE'));
       this.setHelpUrl('');
     },
   };
@@ -102,21 +103,21 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_motorDiff_curve'] = {
     init() {
       this.appendDummyInput()
-        .appendField('conduzir em curva')
+        .appendField(t('BLOCK_DRIVE_IN_A_CURVE'))
         .appendField(new Blockly.FieldDropdown([
-          ['para a frente', 'FOREWARD'],
-          ['para trás',     'BACKWARD'],
+          [t('BLOCK_FORWARD'), 'FOREWARD'],
+          [t('BLOCK_BACKWARD'),     'BACKWARD'],
         ]), 'DIRECTION')
-        .appendField('velocidade esquerda');
+        .appendField(t('BLOCK_LEFT_SPEED'));
       this.appendValueInput('POWER_LEFT').setCheck('Number');
-      this.appendDummyInput().appendField('% velocidade direita');
+      this.appendDummyInput().appendField(t('BLOCK_RIGHT_SPEED'));
       this.appendValueInput('POWER_RIGHT').setCheck('Number');
       this.appendDummyInput().appendField('%');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Conduzir o robô em curva com velocidades independentes para cada motor.');
+      this.setTooltip(t('BLOCK_DRIVE_THE_ROBOT_IN_A_CURVE_WITH_INDEPENDENT_SPEEDS_FOR_EACH_MOTOR'));
       this.setHelpUrl('');
     },
   };
@@ -124,23 +125,23 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_motorDiff_curve_for'] = {
     init() {
       this.appendDummyInput()
-        .appendField('conduzir em curva')
+        .appendField(t('BLOCK_DRIVE_IN_A_CURVE'))
         .appendField(new Blockly.FieldDropdown([
-          ['para a frente', 'FOREWARD'],
-          ['para trás',     'BACKWARD'],
+          [t('BLOCK_FORWARD'), 'FOREWARD'],
+          [t('BLOCK_BACKWARD'),     'BACKWARD'],
         ]), 'DIRECTION')
-        .appendField('velocidade esquerda');
+        .appendField(t('BLOCK_LEFT_SPEED'));
       this.appendValueInput('POWER_LEFT').setCheck('Number');
-      this.appendDummyInput().appendField('% velocidade direita');
+      this.appendDummyInput().appendField(t('BLOCK_RIGHT_SPEED'));
       this.appendValueInput('POWER_RIGHT').setCheck('Number');
-      this.appendDummyInput().appendField('% por uma distância');
+      this.appendDummyInput().appendField(t('BLOCK_FOR_A_DISTANCE'));
       this.appendValueInput('DISTANCE').setCheck('Number');
       this.appendDummyInput().appendField('cm');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Conduzir o robô em curva com velocidades independentes por uma distância.');
+      this.setTooltip(t('BLOCK_DRIVE_THE_ROBOT_IN_A_CURVE_WITH_INDEPENDENT_SPEEDS_FOR_A_DISTANCE'));
       this.setHelpUrl('');
     },
   };
@@ -150,19 +151,19 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_motor_on'] = {
     init() {
       this.appendDummyInput()
-        .appendField('motor')
+        .appendField(t('BLOCK_MOTOR'))
         .appendField(new Blockly.FieldDropdown([
           ['EM1', 'EM1'],
           ['EM2', 'EM2'],
         ]), 'MOTORPORT')
-        .appendField('ligar com velocidade');
+        .appendField(t('BLOCK_START_AT_SPEED'));
       this.appendValueInput('POWER').setCheck('Number');
       this.appendDummyInput().appendField('%');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Ligar um motor a uma velocidade.');
+      this.setTooltip(t('BLOCK_START_A_MOTOR_AT_A_SPEED'));
       this.setHelpUrl('');
     },
   };
@@ -171,25 +172,25 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_motor_on_for'] = {
     init() {
       this.appendDummyInput()
-        .appendField('motor')
+        .appendField(t('BLOCK_MOTOR'))
         .appendField(new Blockly.FieldDropdown([
           ['EM1', 'EM1'],
           ['EM2', 'EM2'],
         ]), 'MOTORPORT')
-        .appendField('ligar com velocidade');
+        .appendField(t('BLOCK_START_AT_SPEED'));
       this.appendValueInput('POWER').setCheck('Number');
-      this.appendDummyInput().appendField('% por');
+      this.appendDummyInput().appendField(t('BLOCK_FOR'));
       this.appendValueInput('VALUE').setCheck('Number');
       this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([
-          ['rotações', 'ROTATIONS'],
-          ['graus',    'DEGREE'],
+          [t('BLOCK_ROTATIONS'), 'ROTATIONS'],
+          [t('BLOCK_DEGREES'),    'DEGREE'],
         ]), 'MOTORROTATION');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Ligar um motor a uma velocidade por um número de rotações ou graus.');
+      this.setTooltip(t('BLOCK_START_A_MOTOR_AT_A_SPEED_FOR_A_NUMBER_OF_ROTATIONS_OR_DEGREES'));
       this.setHelpUrl('');
     },
   };
@@ -197,17 +198,17 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_motor_stop'] = {
     init() {
       this.appendDummyInput()
-        .appendField('motor')
+        .appendField(t('BLOCK_MOTOR'))
         .appendField(new Blockly.FieldDropdown([
           ['EM1', 'EM1'],
           ['EM2', 'EM2'],
         ]), 'MOTORPORT')
-        .appendField('parar');
+        .appendField(t('BLOCK_STOP'));
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Parar um motor.');
+      this.setTooltip(t('BLOCK_STOP_A_MOTOR'));
       this.setHelpUrl('');
     },
   };
@@ -216,30 +217,30 @@ export function registerActionBlocks() {
 
   Blockly.Blocks['robActions_display_text'] = {
     init() {
-      this.appendDummyInput().appendField('mostrar texto');
+      this.appendDummyInput().appendField(t('BLOCK_SHOW_TEXT'));
       this.appendValueInput('OUT');
-      this.appendDummyInput().appendField('na coluna');
+      this.appendDummyInput().appendField(t('BLOCK_AT_COLUMN'));
       this.appendValueInput('COL').setCheck('Number');
-      this.appendDummyInput().appendField('na linha');
+      this.appendDummyInput().appendField(t('BLOCK_AT_ROW'));
       this.appendValueInput('ROW').setCheck('Number');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Mostrar texto no ecrã numa posição específica.');
+      this.setTooltip(t('BLOCK_SHOW_TEXT_ON_THE_SCREEN_AT_A_SPECIFIC_POSITION'));
       this.setHelpUrl('');
     },
   };
 
   Blockly.Blocks['robActions_println'] = {
     init() {
-      this.appendDummyInput().appendField('imprimir linha');
+      this.appendDummyInput().appendField(t('BLOCK_PRINT_LINE'));
       this.appendValueInput('OUT');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Imprimir uma linha de texto no ecrã.');
+      this.setTooltip(t('BLOCK_PRINT_A_LINE_OF_TEXT_ON_THE_SCREEN'));
       this.setHelpUrl('');
     },
   };
@@ -247,38 +248,38 @@ export function registerActionBlocks() {
   // Input named COLOR (American spelling) — matches toolbox shadow definition.
   Blockly.Blocks['robActions_display_set_colour'] = {
     init() {
-      this.appendDummyInput().appendField('definir cor do ecrã');
+      this.appendDummyInput().appendField(t('BLOCK_SET_SCREEN_COLOUR'));
       this.appendValueInput('COLOR').setCheck('Colour');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Definir a cor de fundo do ecrã.');
+      this.setTooltip(t('BLOCK_SET_THE_SCREEN_BACKGROUND_COLOUR'));
       this.setHelpUrl('');
     },
   };
 
   Blockly.Blocks['robActions_display_clear'] = {
     init() {
-      this.appendDummyInput().appendField('limpar ecrã');
+      this.appendDummyInput().appendField(t('BLOCK_CLEAR_SCREEN'));
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Limpar o ecrã.');
+      this.setTooltip(t('BLOCK_CLEAR_THE_SCREEN'));
       this.setHelpUrl('');
     },
   };
 
   Blockly.Blocks['robActions_serial_print'] = {
     init() {
-      this.appendDummyInput().appendField('enviar para a consola');
+      this.appendDummyInput().appendField(t('BLOCK_SEND_TO_CONSOLE'));
       this.appendValueInput('OUT');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Enviar texto para a consola.');
+      this.setTooltip(t('BLOCK_SEND_TEXT_TO_THE_CONSOLE'));
       this.setHelpUrl('');
     },
   };
@@ -288,16 +289,16 @@ export function registerActionBlocks() {
   // Input name is FREQUENCE (not FREQUENCY) — matches toolbox shadow definition.
   Blockly.Blocks['mbedActions_play_tone'] = {
     init() {
-      this.appendDummyInput().appendField('reproduzir tom frequência');
+      this.appendDummyInput().appendField(t('BLOCK_PLAY_TONE_AT_FREQUENCY'));
       this.appendValueInput('FREQUENCE').setCheck('Number');
-      this.appendDummyInput().appendField('Hz duração');
+      this.appendDummyInput().appendField(t('BLOCK_HZ_DURATION'));
       this.appendValueInput('DURATION').setCheck('Number');
       this.appendDummyInput().appendField('ms');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Reproduzir um tom a uma frequência durante um tempo.');
+      this.setTooltip(t('BLOCK_PLAY_A_TONE_AT_A_FREQUENCY_FOR_A_DURATION'));
       this.setHelpUrl('');
     },
   };
@@ -306,61 +307,61 @@ export function registerActionBlocks() {
   Blockly.Blocks['mbedActions_play_note'] = {
     init() {
       this.appendDummyInput()
-        .appendField('reproduzir nota')
+        .appendField(t('BLOCK_PLAY_NOTE'))
         .appendField(new Blockly.FieldDropdown([
-          ['Dó4',   'C4'],
-          ['Ré4',   'D4'],
-          ['Mi4',   'E4'],
-          ['Fá4',   'F4'],
-          ['Sol4',  'G4'],
-          ['Lá4',   'A4'],
-          ['Si4',   'B4'],
-          ['Dó5',   'C5'],
-          ['Ré5',   'D5'],
-          ['Mi5',   'E5'],
-          ['Fá5',   'F5'],
-          ['Sol5',  'G5'],
-          ['Lá5',   'A5'],
-          ['Si5',   'B5'],
-          ['Dó6',   'C6'],
-          ['pausa', 'PAUSE'],
+          [t('BLOCK_C4'),   'C4'],
+          [t('BLOCK_D4'),   'D4'],
+          [t('BLOCK_E4'),   'E4'],
+          [t('BLOCK_F4'),   'F4'],
+          [t('BLOCK_G4'),  'G4'],
+          [t('BLOCK_A4'),   'A4'],
+          [t('BLOCK_B4'),   'B4'],
+          [t('BLOCK_C5'),   'C5'],
+          [t('BLOCK_D5'),   'D5'],
+          [t('BLOCK_E5'),   'E5'],
+          [t('BLOCK_F5'),   'F5'],
+          [t('BLOCK_G5'),  'G5'],
+          [t('BLOCK_A5'),   'A5'],
+          [t('BLOCK_B5'),   'B5'],
+          [t('BLOCK_C6'),   'C6'],
+          [t('BLOCK_REST'), 'PAUSE'],
         ]), 'NOTE')
-        .appendField('durante')
+        .appendField(t('BLOCK_FOR_DURANTE'))
         .appendField(new Blockly.FieldDropdown([
-          ['colcheia (1/8)',  '8'],
-          ['semínima (1/4)', '4'],
-          ['mínima (1/2)',   '2'],
-          ['semibreve (1/1)','1'],
+          [t('BLOCK_EIGHTH_NOTE_1_8'),  '8'],
+          [t('BLOCK_QUARTER_NOTE_1_4'), '4'],
+          [t('BLOCK_HALF_NOTE_1_2'),   '2'],
+          [t('BLOCK_WHOLE_NOTE_1_1'),'1'],
         ]), 'DURATION');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Reproduzir uma nota musical durante um tempo.');
+      this.setTooltip(t('BLOCK_PLAY_A_MUSICAL_NOTE_FOR_A_DURATION'));
       this.setHelpUrl('');
     },
   };
 
   Blockly.Blocks['robActions_play_setVolume'] = {
     init() {
-      this.appendDummyInput().appendField('definir volume');
+      this.appendDummyInput().appendField(t('BLOCK_SET_VOLUME'));
       this.appendValueInput('VOLUME').setCheck('Number');
       this.appendDummyInput().appendField('%');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Definir o volume do altifalante (0–100).');
+      this.setTooltip(t('BLOCK_SET_THE_SPEAKER_VOLUME_0_100'));
       this.setHelpUrl('');
     },
   };
 
   Blockly.Blocks['robActions_play_getVolume'] = {
     init() {
-      this.appendDummyInput().appendField('volume');
+      this.appendDummyInput().appendField(t('BLOCK_VOLUME'));
       this.setOutput(true, 'Number');
       this.setColour('20');
-      this.setTooltip('Obter o volume atual do altifalante.');
+      this.setTooltip(t('BLOCK_GET_THE_CURRENT_SPEAKER_VOLUME'));
       this.setHelpUrl('');
     },
   };
@@ -369,7 +370,7 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_play_recording'] = {
     init() {
       this.appendDummyInput()
-        .appendField('reproduzir gravação')
+        .appendField(t('BLOCK_PLAY_RECORDING'))
         .appendField(new Blockly.FieldDropdown([
           ['hi',  'hi'],
           ['bye', 'bye'],
@@ -380,7 +381,7 @@ export function registerActionBlocks() {
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Reproduzir uma gravação de áudio.');
+      this.setTooltip(t('BLOCK_PLAY_AN_AUDIO_RECORDING'));
       this.setHelpUrl('');
     },
   };
@@ -394,20 +395,20 @@ export function registerActionBlocks() {
       this.appendDummyInput()
         .appendField('LED')
         .appendField(new Blockly.FieldDropdown([
-          ['todos', 'ALL'],
+          [t('BLOCK_ALL'), 'ALL'],
           ['1',     '1'],
           ['2',     '2'],
           ['3',     '3'],
           ['4',     '4'],
           ['5',     '5'],
         ]), 'LED')
-        .appendField('ligar cor');
+        .appendField(t('BLOCK_TURN_ON_WITH_COLOUR'));
       this.appendValueInput('COLOUR').setCheck('Colour');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Ligar um LED RGB do robô com uma cor.');
+      this.setTooltip(t('BLOCK_TURN_ON_A_ROBOT_RGB_LED_WITH_A_COLOUR'));
       this.setHelpUrl('');
     },
   };
@@ -418,33 +419,33 @@ export function registerActionBlocks() {
       this.appendDummyInput()
         .appendField('LED')
         .appendField(new Blockly.FieldDropdown([
-          ['todos', 'ALL'],
+          [t('BLOCK_ALL'), 'ALL'],
           ['1',     '1'],
           ['2',     '2'],
           ['3',     '3'],
           ['4',     '4'],
           ['5',     '5'],
         ]), 'LED')
-        .appendField('desligar');
+        .appendField(t('BLOCK_TURN_OFF'));
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Desligar um LED RGB do robô.');
+      this.setTooltip(t('BLOCK_TURN_OFF_A_ROBOT_RGB_LED'));
       this.setHelpUrl('');
     },
   };
 
   Blockly.Blocks['robActions_led_setBrightness'] = {
     init() {
-      this.appendDummyInput().appendField('definir brilho do LED');
+      this.appendDummyInput().appendField(t('BLOCK_SET_LED_BRIGHTNESS'));
       this.appendValueInput('BRIGHTNESS').setCheck('Number');
       this.appendDummyInput().appendField('%');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Definir o brilho dos LEDs RGB (0–100).');
+      this.setTooltip(t('BLOCK_SET_THE_RGB_LED_BRIGHTNESS_0_100'));
       this.setHelpUrl('');
     },
   };
@@ -454,20 +455,20 @@ export function registerActionBlocks() {
   Blockly.Blocks['robActions_ultrasonic2_led'] = {
     init() {
       this.appendDummyInput()
-        .appendField('LED do ultrassónico')
+        .appendField(t('BLOCK_ULTRASONIC_LED'))
         .appendField(new Blockly.FieldDropdown([
-          ['todos', 'ALL'],
+          [t('BLOCK_ALL'), 'ALL'],
           ['1',     '1'],
           ['2',     '2'],
         ]), 'LED')
-        .appendField('brilho');
+        .appendField(t('BLOCK_BRIGHTNESS'));
       this.appendValueInput('BRIGHTNESS').setCheck('Number');
       this.appendDummyInput().appendField('%');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Definir o brilho do LED do sensor ultrassónico.');
+      this.setTooltip(t('BLOCK_SET_THE_ULTRASONIC_SENSOR_LED_BRIGHTNESS'));
       this.setHelpUrl('');
     },
   };
@@ -475,25 +476,25 @@ export function registerActionBlocks() {
   // Input named COLOR (American spelling) — matches toolbox shadow definition.
   Blockly.Blocks['robActions_quadRGB_led_on'] = {
     init() {
-      this.appendDummyInput().appendField('LED do sensor RGB ligar cor');
+      this.appendDummyInput().appendField(t('BLOCK_RGB_SENSOR_LED_ON_WITH_COLOUR'));
       this.appendValueInput('COLOR').setCheck('Colour');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Ligar o LED do sensor Quad RGB com uma cor.');
+      this.setTooltip(t('BLOCK_TURN_ON_THE_QUAD_RGB_SENSOR_LED_WITH_A_COLOUR'));
       this.setHelpUrl('');
     },
   };
 
   Blockly.Blocks['robActions_quadRGB_led_off'] = {
     init() {
-      this.appendDummyInput().appendField('LED do sensor RGB desligar');
+      this.appendDummyInput().appendField(t('BLOCK_RGB_SENSOR_LED_OFF'));
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('20');
-      this.setTooltip('Desligar o LED do sensor Quad RGB.');
+      this.setTooltip(t('BLOCK_TURN_OFF_THE_QUAD_RGB_SENSOR_LED'));
       this.setHelpUrl('');
     },
   };

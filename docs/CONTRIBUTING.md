@@ -7,9 +7,9 @@ This document is for developers who want to add blocks, fix bugs, or extend the 
 ## Setup
 
 ```bash
-git clone https://github.com/USER/mbot2-sim.git
+git clone https://github.com/fnordpig/mbot2-sim.git
 cd mbot2-sim
-npm install
+npm ci
 npm run dev          # dev server at http://localhost:5173
 ```
 
@@ -30,7 +30,7 @@ There is no enforced linter or formatter. Match the style of the file you're edi
 - Regular JS files (not codegen output) may use ES6+ freely — Vite bundles them.
 - No TypeScript; no JSDoc type annotations (the codebase does not use them).
 - No comments explaining *what* code does — the identifiers do that. Comments only for non-obvious *why* (hidden constraints, workarounds, deliberate quirks like gyro overshoot).
-- All user-facing strings in PT-PT via `src/i18n/pt.js`. Code comments and this document are in English.
+- All user-facing strings use `t()` and the six catalogues in `src/i18n/messages/`. English is the default. Code comments and this document are in English.
 
 ---
 
@@ -51,7 +51,7 @@ Open (or create) the appropriate file in `src/blockly/blocks/`:
 | Colour picker, RGB | `colour.js` |
 | List operations | `list.js` |
 
-Inside the file, call `Blockly.common.defineBlocks({ … })`. The block type ID **must** match Open Roberta exactly. Visual shape, dropdown options, default values, and argument order must match the XML in `reference_openroberta/`. Labels must be in PT-PT.
+Inside the file, call `Blockly.common.defineBlocks({ … })`. The block type ID **must** match Open Roberta exactly. Visual shape, dropdown options, default values, and argument order must match the XML in `reference_openroberta/`. Portuguese labels must match the PT-PT reference; provide the other five translations too.
 
 Example skeleton:
 ```js
@@ -60,10 +60,10 @@ Blockly.common.defineBlocks({
     init() {
       this.appendValueInput('POWER')
           .setCheck('Number')
-          .appendField(Blockly.Msg.MY_BLOCK_LABEL);
+          .appendField(t('MY_BLOCK_LABEL'));
       this.appendDummyInput()
           .appendField(new Blockly.FieldDropdown([
-            ['frente', 'FORWARD'], ['trás', 'BACKWARD'],
+            [t('BLOCK_FORWARD'), 'FORWARD'], [t('BLOCK_BACKWARD'), 'BACKWARD'],
           ]), 'DIRECTION');
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
@@ -77,9 +77,9 @@ Blockly.common.defineBlocks({
 
 Open `src/blockly/toolboxes/beginner.js` or `expert.js` (or both). Add a `{ kind: 'block', type: 'robActions_my_block' }` entry in the correct category and position, mirroring the order in the corresponding Open Roberta XML file (`reference_openroberta/program.toolbox.beginner.xml` or `expert.xml`).
 
-### 3. Add the PT-PT label
+### 3. Add the translated label
 
-Open `src/i18n/pt.js` and add a `Blockly.Msg.MY_BLOCK_LABEL = 'minha etiqueta'` line. All student-visible strings must be here, never hard-coded in block definitions.
+Add a message key to every file in `src/i18n/messages/`: English (`en`), Portuguese (`pt`), Thai (`th`), Simplified Chinese (`zh-CN`), French (`fr`), and German (`de`). Import `t` from `src/i18n/index.js` using the appropriate relative path, then use `t('MY_BLOCK_LABEL')` for custom block labels and tooltips. Toolbox category names use `%{BKY_MY_BLOCK_LABEL}`. Keep Portuguese labels aligned with the upstream XML and preserve every dropdown's internal value across languages.
 
 ### 4. Add codegen
 
@@ -95,12 +95,12 @@ javascriptGenerator.forBlock['robActions_my_block'] = (block) => {
 
 **Important:** generated code runs in ES5 under JS-Interpreter. Do not emit `let`, `const`, arrow functions, template literals, or any ES6+.
 
-For async blocks (actions that take time), use the async-call wrapper:
+For async blocks (actions that take time), emit an ordinary API call:
 
 ```js
 javascriptGenerator.forBlock['robActions_my_timed_block'] = (block) => {
   const ms = javascriptGenerator.valueToCode(block, 'MS', Order.NONE) || '0';
-  return createJsAsyncWrapper(`robotAPI.my_async_action`, [ms]);
+  return `robotAPI.my_async_action(${ms});\n`;
 };
 ```
 
@@ -192,7 +192,9 @@ See `CLAUDE.md` Rule 9 for the reserved colour table. Do not add reserved colour
 
 ## Testing
 
-There are no automated tests. The project was validated by manual acceptance criteria at the end of each phase (see `docs/HISTORY.md`). If you want to add tests, that is welcome — there is no test framework in place, so you would need to introduce one. The most valuable test targets would be:
+Run `npm test` for the automated regression checks, using Node's built-in test runner. Runtime checks exercise the actual Blockly generator and JS-Interpreter with a controlled animation-frame scheduler. Add a regression that fails before each behavioral fix, then verify the browser workflow described in the PR template. Run `npm run build` before submitting a PR.
+
+The project also uses manual acceptance criteria (see `docs/HISTORY.md`). Additional valuable test targets include:
 
 - `src/sim/kinematics.js` — pure function, easy to unit test
 - `src/codegen/*.js` — generate code from a known workspace XML, assert the JS string
@@ -200,9 +202,13 @@ There are no automated tests. The project was validated by manual acceptance cri
 
 ---
 
-## PT-PT translations
+## Interface translations
 
-All user-facing strings live in `src/i18n/pt.js` as `Blockly.Msg.*` assignments. This file is loaded before any block definitions so the strings are available when blocks initialise. Never hard-code Portuguese text inside block definitions or UI code — always add a key to `pt.js` first.
+`src/i18n/index.js` loads the selected catalogue and official Blockly locale. English is the first-visit default and fallback. `src/i18n/pt.js` retains the existing PT-PT overrides for standard Blockly messages. Custom messages live in `src/i18n/messages/`; each locale must contain the same keys and `{placeholder}` names as English.
+
+Use `t('MESSAGE_KEY', { name: value })` for application messages. HTML labels declare `data-i18n`, `data-i18n-title`, or `data-i18n-label`. Do not translate block type IDs, input names, dropdown values, student text, variable names, or map filenames. Locale files load on demand. Switching languages reconstructs blocks from Blockly's serialized workspace so their labels refresh while connections, values, variables, and mutator state survive.
+
+Run `npm test` to check catalogue coverage and program invariance across languages. In the browser, switch languages with a nonempty workspace, reload to check persistence, and run the same program in each language.
 
 Internal code comments and developer console messages are in English.
 

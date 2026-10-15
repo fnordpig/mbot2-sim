@@ -1,29 +1,31 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mBot 2 — Simulador</title>
+  <title>mBot 2 Simulator</title>
   <link rel="stylesheet" href="/src/styles.css" />
 </head>
 <body>
   <header id="topbar">
-    <h1>Simulador mBot 2</h1>
+    <h1 data-i18n="APP_TITLE">mBot 2 Simulator</h1>
     <div id="controls">
-      <button id="btn-run">▶ Executar</button>
-      <button id="btn-stop">■ Parar</button>
-      <button id="btn-reset">↻ Reiniciar</button>
-      <button id="btn-center">🔍 Centrar</button>
-      <button id="btn-save">Guardar</button>
-      <button id="btn-load">Carregar</button>
-      <button id="btn-new">Novo</button>
+      <button id="btn-run" data-i18n="RUN" data-icon="▶">▶ Run</button>
+      <button id="btn-stop" data-i18n="STOP" data-icon="■">■ Stop</button>
+      <button id="btn-reset" data-i18n="RESET" data-icon="↻">↻ Reset</button>
+      <button id="btn-center" data-i18n="CENTER" data-icon="🔍">🔍 Centre</button>
+      <button id="btn-save" data-i18n="SAVE">Save</button>
+      <button id="btn-load" data-i18n="LOAD">Load</button>
+      <button id="btn-new" data-i18n="NEW">New</button>
       <input type="file" id="file-input-load" accept=".xml" style="display:none" />
-      <label for="map-select" id="map-select-label">Mapa:</label>
-      <select id="map-select" title="Selecionar mapa"></select>
-      <select id="toolbox-mode">
-        <option value="beginner">Principiante</option>
-        <option value="expert">Avançado</option>
+      <label for="map-select" id="map-select-label" data-i18n="MAP_LABEL">Map:</label>
+      <select id="map-select" title="Select map" data-i18n-title="MAP_SELECT" data-i18n-label="MAP_SELECT"></select>
+      <select id="toolbox-mode" aria-label="Toolbox level" data-i18n-label="TOOLBOX_MODE">
+        <option value="beginner" data-i18n="BEGINNER">Beginner</option>
+        <option value="expert" data-i18n="EXPERT">Expert</option>
       </select>
+      <label for="language-select" data-i18n="LANGUAGE">Language</label>
+      <select id="language-select" aria-label="Language" data-i18n-label="LANGUAGE"></select>
     </div>
   </header>
   <main>
@@ -37,7 +39,7 @@
         <div id="console-panel"></div>
       </div>
       <div id="button-row-wrapper">
-        <span class="button-row-label">Controlador:</span>
+        <span class="button-row-label" data-i18n="CONTROLLER">Controller:</span>
         <div id="button-row"></div>
       </div>
     </div>

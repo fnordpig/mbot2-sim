@@ -6,13 +6,15 @@ import { initDisplay }     from './ui/display.js';
 import { initButtons }     from './ui/buttons.js';
 import { initMapSelector } from './ui/mapSelector.js';
 import { initProgramIO }   from './ui/programIO.js';
+import { initLanguageControls } from './ui/language.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   initConsole();
   initDisplay();
   initSim();
-  initBlockly();
+  await initBlockly();
   initControls();
+  initLanguageControls();
   initProgramIO();   // auto-restore + auto-save must come after Blockly is mounted
   initButtons();
   await initMapSelector();

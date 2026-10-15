@@ -2,7 +2,7 @@
   "name": "mbot2-sim",
   "private": true,
   "version": "1.0.0",
-  "description": "Browser-based simulator for Makeblock mBot 2 with an Open Roberta Lab-compatible block editor in PT-PT",
+  "description": "Multilingual browser-based simulator for Makeblock mBot 2 with an Open Roberta Lab-compatible block editor",
   "license": "MIT",
   "keywords": [
     "mbot2",

@@ -9,7 +9,7 @@ A browser-based digital twin of the **Makeblock mBot 2 (CyberPi)** with a drag-a
 
 ## What it is
 
-A static, client-side web application that gives Portuguese-speaking robotics classrooms a sandboxed environment to test mBot 2 programs before deploying to hardware. The block editor is visually and structurally compatible with Open Roberta Lab's mBot 2 toolbox (Beginner + Expert levels, all in PT-PT). Programs execute inside [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter) against a 2D physics simulation with differential-drive kinematics, ultrasonic raycasting, quad-RGB colour sensing, and PNG-based arena maps.
+A static, client-side web application that gives robotics classrooms a sandboxed environment to test mBot 2 programs before deploying to hardware. English is the default; use the Language selector for Portuguese (PT-PT), Thai, Simplified Chinese, French, or German. The block editor is visually and structurally compatible with Open Roberta Lab's mBot 2 toolbox (Beginner + Expert levels). Programs execute inside [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter) against a 2D physics simulation with differential-drive kinematics, ultrasonic raycasting, quad-RGB colour sensing, and PNG-based arena maps.
 
 ## What it is NOT
 
@@ -22,7 +22,7 @@ A static, client-side web application that gives Portuguese-speaking robotics cl
 
 ## Features
 
-- Open Roberta Lab toolbox (Beginner + Expert) cloned in European Portuguese (PT-PT)
+- Open Roberta Lab toolbox (Beginner + Expert) with six interface languages
 - All locomotion, audio, display, LED, sensor, control-flow, math, text, list, and communication blocks implemented
 - 2D differential-drive physics at 60 fps (differential drive, axis-separated collision)
 - 3-ray ultrasonic cone raycast (15° aperture) against obstacle pixels
@@ -42,11 +42,15 @@ A static, client-side web application that gives Portuguese-speaking robotics cl
 Node 18 or newer.
 
 ```bash
-git clone https://github.com/USER/mbot2-sim.git
+git clone https://github.com/fnordpig/mbot2-sim.git
 cd mbot2-sim
-npm install
+npm ci
 npm run dev          # dev server at http://localhost:5173
 ```
+
+The language selector updates menus, custom blocks, tooltips, and application messages without changing the program. The selected language is remembered on this browser when local storage is available. Language switching is disabled while a program runs. Map filenames and text entered by students retain their original spelling.
+
+Run `npm test` for regression checks before `npm run build` and browser testing.
 
 ### Production build
 
@@ -114,7 +118,7 @@ mbot2-sim/
 │   ├── runtime/        JS-Interpreter lifecycle, async ticketing, sandbox injection
 │   ├── sim/            Physics simulation: kinematics, map, sensors, robot state, LEDs
 │   ├── ui/             DOM panels: console, display overlay, buttons, map selector
-│   └── i18n/           PT-PT Blockly message overrides
+│   └── i18n/           Six language catalogues, locale loading, PT-PT Blockly overrides
 ├── docs/               Contributor and operator documentation
 ├── reference_openroberta/  Upstream XML and context files (source of truth for block fidelity)
 ├── scripts/            Build-time utilities (e.g. map generation)

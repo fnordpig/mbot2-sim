@@ -10,7 +10,7 @@ Read this **before every coding session**. Violating any rule below means rework
 
 - Every block **type ID** must match Open Roberta exactly (e.g., `robActions_motorDiff_on_for`, `robSensors_ultrasonic_getSample`).
 - Every block **visual shape, dropdown options, default values, and argument order** must match the XML files in `reference_openroberta/`.
-- Block **labels** must match Open Roberta's PT-PT translation (e.g., `conduzir ◇ a velocidade ◇ % distância ◇ cm`).
+- Portuguese block **labels** must match Open Roberta's PT-PT translation (e.g., `conduzir ◇ a velocidade ◇ % distância ◇ cm`). Other locales translate labels while preserving block IDs, inputs, dropdown values, and argument order.
 - The **toolbox structure** (categories, subcategories, order) must match `program.toolbox.beginner.xml` and `program.toolbox.expert.xml`.
 
 ## 2. Source of Truth
@@ -101,9 +101,9 @@ Colour matching uses ±40 RGB Euclidean distance tolerance. Source: `src/sim/map
 
 ## 11. UI Language
 
-- **All student-facing UI in PT-PT.** Source: `src/i18n/pt.js`.
+- **English is the default student-facing language.** Also support Portuguese (PT-PT), Thai, Simplified Chinese, French, and German. Sources: `src/i18n/messages/` plus the matching official Blockly locale. Keep every catalogue's keys and interpolation placeholders aligned with English.
 - **Code comments + docs in English.**
-- Console/error messages shown to students: PT-PT.
+- Console/error messages shown to students use the selected language through `t()` from `src/i18n/index.js`.
 - Console/error messages for developers (DevTools): English is fine.
 
 ## 12. File Discipline

@@ -1,3 +1,4 @@
+import { t } from '../i18n/index.js';
 import { generateCode } from '../codegen/index.js';
 import { createInterpreter, stepInterpreter, destroyInterpreter, isInterpreterPaused } from './interpreter.js';
 import { RunState, getRunState, setRunState, asyncTicket } from './runState.js';
@@ -23,7 +24,7 @@ export function run(workspace) {
   } catch (err) {
     clearExecution();
     console.error('[runLoop] Interpreter init error:', err);
-    appendConsoleMessage('Erro ao iniciar o programa: ' + err.message, 'error');
+    appendConsoleMessage(t('PROGRAM_INIT_ERROR', { error: err.message }), 'error');
     setRunState(RunState.ERRORED);
     return;
   }
@@ -40,7 +41,7 @@ export function stop() {
 
   clearExecution();
   setRunState(RunState.STOPPED);
-  appendConsoleMessage('Programa interrompido.', 'warn');
+  appendConsoleMessage(t('PROGRAM_STOPPED'), 'warn');
 }
 
 function clearExecution() {
@@ -64,7 +65,7 @@ function _tick() {
   } catch (err) {
     clearExecution();
     console.error('[runLoop] Runtime error:', err);
-    appendConsoleMessage('Erro de execução: ' + err.message, 'error');
+    appendConsoleMessage(t('PROGRAM_RUNTIME_ERROR', { error: err.message }), 'error');
     setRunState(RunState.ERRORED);
   }
 }
@@ -83,7 +84,7 @@ function advanceInterpreter() {
   if (isMagentaCollision(robot.x, robot.y, ROBOT_CONSTANTS.BODY_RADIUS_CM)) {
     clearExecution();
     setRunState(RunState.STOPPED);
-    appendConsoleMessage('Colisão detectada.', 'error');
+    appendConsoleMessage(t('PROGRAM_COLLISION'), 'error');
     return;
   }
 
@@ -99,7 +100,7 @@ function advanceInterpreter() {
       // Ticket resolved but no resume callback registered — interpreter cannot unpause.
       // Stop rather than loop forever in PAUSED_ASYNC with nothing to resolve it.
       console.error('[runLoop] asyncTicket resolved with null callback');
-      appendConsoleMessage('Erro interno: operação assíncrona sem retorno.', 'error');
+      appendConsoleMessage(t('PROGRAM_ASYNC_ERROR'), 'error');
       clearExecution();
       setRunState(RunState.ERRORED);
       return;
@@ -122,7 +123,7 @@ function advanceInterpreter() {
     if (!stepInterpreter()) {
       clearExecution();
       setRunState(RunState.IDLE);
-      appendConsoleMessage('Programa terminado.', 'info');
+      appendConsoleMessage(t('PROGRAM_FINISHED'), 'info');
       return;
     }
     if (isInterpreterPaused()) {

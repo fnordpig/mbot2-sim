@@ -1,3 +1,4 @@
+import { t } from '../../i18n/index.js';
 import * as Blockly from 'blockly';
 
 export function registerSensorBlocks() {
@@ -7,14 +8,14 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_ultrasonic_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('valor do sensor ultrassónico')
+        .appendField(t('BLOCK_ULTRASONIC_SENSOR_VALUE'))
         .appendField(new Blockly.FieldDropdown([
           ['1', '1'],
         ]), 'SENSORPORT')
-        .appendField('em cm');
+        .appendField(t('BLOCK_IN_CM'));
       this.setOutput(true, 'Number');
       this.setColour('200');
-      this.setTooltip('Lê a distância em cm do sensor ultrassónico (0–300 cm; 300 = sem eco).');
+      this.setTooltip(t('BLOCK_READ_THE_ULTRASONIC_SENSOR_DISTANCE_IN_CM_0_300_CM_300_NO_ECHO'));
       this.setHelpUrl('');
     },
   };
@@ -22,11 +23,11 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_quadrgb_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('valor do sensor RGB')
+        .appendField(t('BLOCK_RGB_SENSOR_VALUE'))
         .appendField(new Blockly.FieldDropdown([
           ['1', '1'],
         ]), 'SENSORPORT')
-        .appendField('sonda')
+        .appendField(t('BLOCK_PROBE'))
         .appendField(new Blockly.FieldDropdown([
           ['1', '1'],
           ['2', '2'],
@@ -34,13 +35,13 @@ export function registerSensorBlocks() {
           ['4', '4'],
         ]), 'SLOT')
         .appendField(new Blockly.FieldDropdown([
-          ['cor',       'COLOUR'],
-          ['claridade', 'LIGHT'],
+          [t('BLOCK_COLOUR'),       'COLOUR'],
+          [t('BLOCK_LIGHT_LEVEL'), 'LIGHT'],
           ['RGB',       'RGB'],
         ]), 'MODE');
       this.setOutput(true, null);
       this.setColour('200');
-      this.setTooltip('Lê uma sonda (1–4) do sensor Quad RGB. Devolve nome da cor (COLOUR), brilho 0–100 (LIGHT) ou lista [R,G,B] (RGB).');
+      this.setTooltip(t('BLOCK_READ_ONE_PROBE_1_4_OF_THE_QUAD_RGB_SENSOR_RETURNS_A_COLOUR_NAME_COLOUR_BRIGHTNESS_0_100_LIGHT_OR_AN_R_G_B_LIST_RGB'));
       this.setHelpUrl('');
     },
   };
@@ -50,10 +51,10 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_sound_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('valor do microfone em %');
+        .appendField(t('BLOCK_MICROPHONE_VALUE_IN'));
       this.setOutput(true, 'Number');
       this.setColour('200');
-      this.setTooltip('Lê o nível de som do microfone integrado (0–100%).');
+      this.setTooltip(t('BLOCK_READ_THE_BUILT_IN_MICROPHONE_SOUND_LEVEL_0_100'));
       this.setHelpUrl('');
     },
   };
@@ -61,19 +62,19 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_sound_record'] = {
     init() {
       this.appendDummyInput()
-        .appendField('gravar som')
+        .appendField(t('BLOCK_RECORD_SOUND'))
         .appendField(new Blockly.FieldDropdown([
-          ['iniciar', 'START'],
-          ['parar',   'STOP'],
+          [t('BLOCK_START'), 'START'],
+          [t('BLOCK_STOP'),   'STOP'],
         ]), 'CMD')
-        .appendField('durante');
+        .appendField(t('BLOCK_FOR_DURANTE'));
       this.appendValueInput('DURATION').setCheck('Number');
       this.appendDummyInput().appendField('s');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('200');
-      this.setTooltip('Iniciar ou parar a gravação de som durante um tempo em segundos.');
+      this.setTooltip(t('BLOCK_START_OR_STOP_SOUND_RECORDING_FOR_A_DURATION_IN_SECONDS'));
       this.setHelpUrl('');
     },
   };
@@ -81,17 +82,17 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_joystickKeys_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('valor do joystick direção')
+        .appendField(t('BLOCK_JOYSTICK_DIRECTION_VALUE'))
         .appendField(new Blockly.FieldDropdown([
-          ['cima',     'UP'],
-          ['baixo',    'DOWN'],
-          ['esquerda', 'LEFT'],
-          ['direita',  'RIGHT'],
-          ['centro',   'MIDDLE'],
+          [t('BLOCK_UP'),     'UP'],
+          [t('BLOCK_DOWN'),    'DOWN'],
+          [t('BLOCK_LEFT'), 'LEFT'],
+          [t('BLOCK_RIGHT'),  'RIGHT'],
+          [t('BLOCK_CENTRE'),   'MIDDLE'],
         ]), 'DIRECTION');
       this.setOutput(true, 'Boolean');
       this.setColour('200');
-      this.setTooltip('Verifica se o joystick está pressionado na direção indicada.');
+      this.setTooltip(t('BLOCK_CHECK_WHETHER_THE_JOYSTICK_IS_PRESSED_IN_THE_SPECIFIED_DIRECTION'));
       this.setHelpUrl('');
     },
   };
@@ -99,15 +100,15 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_key_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('tecla')
+        .appendField(t('BLOCK_BUTTON'))
         .appendField(new Blockly.FieldDropdown([
           ['A', 'A'],
           ['B', 'B'],
         ]), 'KEY')
-        .appendField('pressionada');
+        .appendField(t('BLOCK_PRESSED'));
       this.setOutput(true, 'Boolean');
       this.setColour('200');
-      this.setTooltip('Verifica se o botão A ou B está pressionado.');
+      this.setTooltip(t('BLOCK_CHECK_WHETHER_BUTTON_A_OR_B_IS_PRESSED'));
       this.setHelpUrl('');
     },
   };
@@ -115,10 +116,10 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_light_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('valor do sensor de luz em %');
+        .appendField(t('BLOCK_LIGHT_SENSOR_VALUE_IN'));
       this.setOutput(true, 'Number');
       this.setColour('200');
-      this.setTooltip('Lê o sensor de luz integrado (0–100%).');
+      this.setTooltip(t('BLOCK_READ_THE_BUILT_IN_LIGHT_SENSOR_0_100'));
       this.setHelpUrl('');
     },
   };
@@ -127,10 +128,10 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_gyro_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('giroscópio')
+        .appendField(t('BLOCK_GYROSCOPE'))
         .appendField(new Blockly.FieldDropdown([
-          ['ângulo',     'ANGLE'],
-          ['velocidade', 'RATE'],
+          [t('BLOCK_ANGLE'),     'ANGLE'],
+          [t('BLOCK_SPEED'), 'RATE'],
         ]), 'SLOT')
         .appendField(new Blockly.FieldDropdown([
           ['x', 'X'],
@@ -139,7 +140,7 @@ export function registerSensorBlocks() {
         ]), 'AXIS');
       this.setOutput(true, 'Number');
       this.setColour('200');
-      this.setTooltip('Lê o giroscópio: ângulo (graus) ou velocidade angular (graus/s) num eixo.');
+      this.setTooltip(t('BLOCK_READ_THE_GYROSCOPE_ANGLE_DEGREES_OR_ANGULAR_SPEED_DEGREES_S_ON_AN_AXIS'));
       this.setHelpUrl('');
     },
   };
@@ -147,9 +148,9 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_gyro_reset_axis'] = {
     init() {
       this.appendDummyInput()
-        .appendField('repor giroscópio')
+        .appendField(t('BLOCK_RESET_GYROSCOPE'))
         .appendField(new Blockly.FieldDropdown([
-          ['todos', 'ALL'],
+          [t('BLOCK_ALL'), 'ALL'],
           ['x',     'X'],
           ['y',     'Y'],
           ['z',     'Z'],
@@ -157,7 +158,7 @@ export function registerSensorBlocks() {
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('200');
-      this.setTooltip('Repor o giroscópio no eixo selecionado.');
+      this.setTooltip(t('BLOCK_RESET_THE_GYROSCOPE_ON_THE_SELECTED_AXIS'));
       this.setHelpUrl('');
     },
   };
@@ -165,7 +166,7 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_accelerometer_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('acelerómetro')
+        .appendField(t('BLOCK_ACCELEROMETER'))
         .appendField(new Blockly.FieldDropdown([
           ['x', 'X'],
           ['y', 'Y'],
@@ -173,7 +174,7 @@ export function registerSensorBlocks() {
         ]), 'AXIS');
       this.setOutput(true, 'Number');
       this.setColour('200');
-      this.setTooltip('Lê o acelerómetro num eixo.');
+      this.setTooltip(t('BLOCK_READ_THE_ACCELEROMETER_ON_AN_AXIS'));
       this.setHelpUrl('');
     },
   };
@@ -183,14 +184,14 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_timer_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('temporizador')
+        .appendField(t('BLOCK_TIMER'))
         .appendField(new Blockly.FieldDropdown([
           ['1', '1'],
           ['2', '2'],
         ]), 'SENSORPORT');
       this.setOutput(true, 'Number');
       this.setColour('200');
-      this.setTooltip('Lê o tempo decorrido do temporizador em ms.');
+      this.setTooltip(t('BLOCK_READ_THE_TIMER_S_ELAPSED_TIME_IN_MS'));
       this.setHelpUrl('');
     },
   };
@@ -198,7 +199,7 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_timer_reset'] = {
     init() {
       this.appendDummyInput()
-        .appendField('repor temporizador')
+        .appendField(t('BLOCK_RESET_TIMER'))
         .appendField(new Blockly.FieldDropdown([
           ['1', '1'],
           ['2', '2'],
@@ -206,7 +207,7 @@ export function registerSensorBlocks() {
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('200');
-      this.setTooltip('Repor o temporizador selecionado para zero.');
+      this.setTooltip(t('BLOCK_RESET_THE_SELECTED_TIMER_TO_ZERO'));
       this.setHelpUrl('');
     },
   };
@@ -215,19 +216,19 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_encoder_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('codificador motor')
+        .appendField(t('BLOCK_MOTOR_ENCODER'))
         .appendField(new Blockly.FieldDropdown([
           ['EM1', 'EM1'],
           ['EM2', 'EM2'],
         ]), 'MOTORPORT')
         .appendField(new Blockly.FieldDropdown([
-          ['rotações',  'ROTATION'],
-          ['graus',     'DEGREE'],
-          ['distância', 'DISTANCE'],
+          [t('BLOCK_ROTATIONS'),  'ROTATION'],
+          [t('BLOCK_DEGREES'),     'DEGREE'],
+          [t('BLOCK_DISTANCE'), 'DISTANCE'],
         ]), 'MODE');
       this.setOutput(true, 'Number');
       this.setColour('200');
-      this.setTooltip('Lê o codificador do motor: rotações, graus ou distância em cm.');
+      this.setTooltip(t('BLOCK_READ_THE_MOTOR_ENCODER_ROTATIONS_DEGREES_OR_DISTANCE_IN_CM'));
       this.setHelpUrl('');
     },
   };
@@ -235,7 +236,7 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_encoder_reset'] = {
     init() {
       this.appendDummyInput()
-        .appendField('repor codificador')
+        .appendField(t('BLOCK_RESET_ENCODER'))
         .appendField(new Blockly.FieldDropdown([
           ['EM1', 'EM1'],
           ['EM2', 'EM2'],
@@ -243,7 +244,7 @@ export function registerSensorBlocks() {
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('200');
-      this.setTooltip('Repor o codificador do motor para zero.');
+      this.setTooltip(t('BLOCK_RESET_THE_MOTOR_ENCODER_TO_ZERO'));
       this.setHelpUrl('');
     },
   };
@@ -254,19 +255,19 @@ export function registerSensorBlocks() {
   Blockly.Blocks['robSensors_line_getSample'] = {
     init() {
       this.appendDummyInput()
-        .appendField('sensor de linha')
+        .appendField(t('BLOCK_LINE_SENSOR'))
         .appendField(new Blockly.FieldDropdown([
           ['1', '1'],
         ]), 'SENSORPORT')
         .appendField(new Blockly.FieldDropdown([
-          ['esquerda', 'L'],
-          ['direita',  'R'],
-          ['ambos',    'ALL'],
-          ['código',   'CODE'],
+          [t('BLOCK_LEFT'), 'L'],
+          [t('BLOCK_RIGHT'),  'R'],
+          [t('BLOCK_BOTH'),    'ALL'],
+          [t('BLOCK_CODE'),   'CODE'],
         ]), 'MODE');
       this.setOutput(true, null);
       this.setColour('200');
-      this.setTooltip('Lê o sensor de linha: esquerda/direita/ambos (booleano) ou código numérico.');
+      this.setTooltip(t('BLOCK_READ_THE_LINE_SENSOR_LEFT_RIGHT_BOTH_BOOLEAN_OR_NUMERIC_CODE'));
       this.setHelpUrl('');
     },
   };
@@ -277,33 +278,33 @@ export function registerSensorBlocks() {
     init() {
       // TODO Phase 4: dynamic field reconstruction based on SENSORTYPE
       this.appendDummyInput()
-        .appendField('obter valor de')
+        .appendField(t('BLOCK_GET_VALUE_FROM'))
         .appendField(new Blockly.FieldDropdown([
-          ['ultrassónico', 'ULTRASONIC'],
+          [t('BLOCK_ULTRASONIC'), 'ULTRASONIC'],
           ['RGB',          'QUADRGB'],
-          ['tecla',        'KEY'],
-          ['joystick',     'JOYSTICK'],
-          ['luz',          'LIGHT'],
-          ['giroscópio',   'GYRO'],
-          ['acelerómetro', 'ACCEL'],
-          ['temporizador', 'TIMER'],
-          ['codificador',  'ENCODER'],
-          ['linha',        'LINE'],
-          ['som',          'SOUND'],
+          [t('BLOCK_BUTTON'),        'KEY'],
+          [t('BLOCK_JOYSTICK'),     'JOYSTICK'],
+          [t('BLOCK_LIGHT'),          'LIGHT'],
+          [t('BLOCK_GYROSCOPE'),   'GYRO'],
+          [t('BLOCK_ACCELEROMETER'), 'ACCEL'],
+          [t('BLOCK_TIMER'), 'TIMER'],
+          [t('BLOCK_ENCODER'),  'ENCODER'],
+          [t('BLOCK_LINE'),        'LINE'],
+          [t('BLOCK_SOUND'),          'SOUND'],
         ]), 'SENSORTYPE')
         .appendField(new Blockly.FieldDropdown([
-          ['valor',      'VALUE'],
-          ['cor',        'COLOR'],
-          ['linha',      'LINE'],
-          ['ângulo',     'ANGLE'],
-          ['velocidade', 'RATE'],
-          ['estado',     'STA'],
+          [t('BLOCK_VALUE'),      'VALUE'],
+          [t('BLOCK_COLOUR'),        'COLOR'],
+          [t('BLOCK_LINE'),      'LINE'],
+          [t('BLOCK_ANGLE'),     'ANGLE'],
+          [t('BLOCK_SPEED'), 'RATE'],
+          [t('BLOCK_STATE'),     'STA'],
           ['RGB',        'RGB'],
-          ['claridade',  'BRIGHTNESS'],
+          [t('BLOCK_LIGHT_LEVEL'),  'BRIGHTNESS'],
         ]), 'SENSORMODE');
       this.setOutput(true, null);
       this.setColour('200');
-      this.setTooltip('Bloco genérico — usar dentro de bloco esperar.');
+      this.setTooltip(t('BLOCK_GENERIC_BLOCK_USE_INSIDE_A_WAIT_BLOCK'));
       this.setHelpUrl('');
     },
   };

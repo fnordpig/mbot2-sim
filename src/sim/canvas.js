@@ -1,3 +1,4 @@
+import { t } from '../i18n/index.js';
 import { robot, resetRobot, ROBOT_CONSTANTS } from './robot.js';
 import { step } from './kinematics.js';
 import { PX_PER_CM, worldToScreen } from './world.js';
@@ -241,11 +242,13 @@ function draw() {
   ctx.font = `${hudFont}px monospace`;
   ctx.fillText(`x:${robot.x.toFixed(1)}cm  y:${robot.y.toFixed(1)}cm  θ:${(robot.theta * 180 / Math.PI).toFixed(1)}\xB0`, hudX, hudY0);
   ctx.fillText(`vL:${robot.vL} vR:${robot.vR} RPM`, hudX, hudY0 + hudLine);
-  ctx.fillText(`dist:${robot.totalDistanceCm.toFixed(1)}cm`, hudX, hudY0 + hudLine * 2);
-  ctx.fillText(`color: ${getColorNameAt(robot.x, robot.y)}`, hudX, hudY0 + hudLine * 3);
+  ctx.fillText(`${t('HUD_DISTANCE')}:${robot.totalDistanceCm.toFixed(1)}cm`, hudX, hudY0 + hudLine * 2);
+  const colour = getColorNameAt(robot.x, robot.y);
+  const colourLabel = colour === 'none' ? t('HUD_NO_COLOUR') : t('BLOCK_' + colour.toUpperCase());
+  ctx.fillText(`${t('HUD_COLOUR')}: ${colourLabel}`, hudX, hudY0 + hudLine * 3);
   if (paused) {
     ctx.fillStyle = '#f87171';
-    ctx.fillText('PAUSADO', hudX, hudY0 + hudLine * 4);
+    ctx.fillText(t('HUD_PAUSED'), hudX, hudY0 + hudLine * 4);
   }
 }
 

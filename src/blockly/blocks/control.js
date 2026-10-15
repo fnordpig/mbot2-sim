@@ -1,3 +1,4 @@
+import { t } from '../../i18n/index.js';
 import * as Blockly from 'blockly';
 import { loops } from 'blockly/blocks';
 import { makePlusMinusMutator } from './_plusMinusMutator.js';
@@ -51,7 +52,7 @@ const ROB_WAIT_FOR_MUTATOR = makePlusMinusMutator({
   addExtraArm(block, n) {
     block.appendValueInput('WAIT' + n)
       .setCheck('Boolean')
-      .appendField('ou');
+      .appendField(t('BLOCK_OR'));
   },
   extraArmInputs(n) { return ['WAIT' + n]; },
 });
@@ -86,7 +87,7 @@ export function registerControlBlocks() {
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('120');
-      this.setTooltip('Executar ações se uma condição for verdadeira.');
+      this.setTooltip(t('BLOCK_EXECUTE_ACTIONS_IF_A_CONDITION_IS_TRUE'));
       this.setHelpUrl('');
       // BUTTONS row + any persisted elseif arms are added here.
       this.updateShape_();
@@ -106,7 +107,7 @@ export function registerControlBlocks() {
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('120');
-      this.setTooltip('Executar ações se uma condição for verdadeira, senão executar outras.');
+      this.setTooltip(t('BLOCK_EXECUTE_ACTIONS_IF_A_CONDITION_IS_TRUE_OTHERWISE_EXECUTE_OTHER_ACTIONS'));
       this.setHelpUrl('');
       // ELSE input + BUTTONS row + any persisted elseif arms are added here.
       this.updateShape_();
@@ -117,11 +118,11 @@ export function registerControlBlocks() {
 
   Blockly.Blocks['robControls_loopForever'] = {
     init() {
-      this.appendStatementInput('DO').appendField('repetir para sempre fazer');
+      this.appendStatementInput('DO').appendField(t('BLOCK_REPEAT_FOREVER_DO'));
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('120');
-      this.setTooltip('Repetir as ações indefinidamente.');
+      this.setTooltip(t('BLOCK_REPEAT_THE_ACTIONS_INDEFINITELY'));
       this.setHelpUrl('');
     },
   };
@@ -129,20 +130,20 @@ export function registerControlBlocks() {
   Blockly.Blocks['robControls_for'] = {
     init() {
       this.appendDummyInput()
-        .appendField('contar com')
+        .appendField(t('BLOCK_COUNT_WITH'))
         .appendField(new Blockly.FieldVariable('i'), 'VAR')
-        .appendField('de');
+        .appendField(t('BLOCK_FROM'));
       this.appendValueInput('FROM').setCheck('Number');
-      this.appendDummyInput().appendField('até');
+      this.appendDummyInput().appendField(t('BLOCK_THROUGH'));
       this.appendValueInput('TO').setCheck('Number');
-      this.appendDummyInput().appendField('em incrementos de');
+      this.appendDummyInput().appendField(t('BLOCK_BY_INCREMENTS_OF'));
       this.appendValueInput('BY').setCheck('Number');
-      this.appendStatementInput('DO').appendField('fazer');
+      this.appendStatementInput('DO').appendField(t('BLOCK_DO'));
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('120');
-      this.setTooltip('Contar com uma variável de um valor até outro, em incrementos.');
+      this.setTooltip(t('BLOCK_COUNT_WITH_A_VARIABLE_FROM_ONE_VALUE_TO_ANOTHER_IN_INCREMENTS'));
       this.setHelpUrl('');
     },
   };
@@ -150,16 +151,16 @@ export function registerControlBlocks() {
   Blockly.Blocks['robControls_forEach'] = {
     init() {
       this.appendDummyInput()
-        .appendField('para cada item')
+        .appendField(t('BLOCK_FOR_EACH_ITEM'))
         .appendField(new Blockly.FieldVariable('i'), 'VAR')
-        .appendField('na lista');
+        .appendField(t('BLOCK_IN_LIST'));
       this.appendValueInput('LIST').setCheck('Array');
-      this.appendStatementInput('DO').appendField('fazer');
+      this.appendStatementInput('DO').appendField(t('BLOCK_DO'));
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('120');
-      this.setTooltip('Iterar sobre cada item de uma lista.');
+      this.setTooltip(t('BLOCK_ITERATE_OVER_EACH_ITEM_IN_A_LIST'));
       this.setHelpUrl('');
     },
   };
@@ -168,25 +169,25 @@ export function registerControlBlocks() {
 
   Blockly.Blocks['robControls_wait'] = {
     init() {
-      this.appendDummyInput().appendField('esperar');
+      this.appendDummyInput().appendField(t('BLOCK_WAIT'));
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('120');
-      this.setTooltip('Ceder o controlo ao simulador por um ciclo.');
+      this.setTooltip(t('BLOCK_YIELD_CONTROL_TO_THE_SIMULATOR_FOR_ONE_CYCLE'));
       this.setHelpUrl('');
     },
   };
 
   Blockly.Blocks['robControls_wait_time'] = {
     init() {
-      this.appendDummyInput().appendField('esperar');
+      this.appendDummyInput().appendField(t('BLOCK_WAIT'));
       this.appendValueInput('WAIT').setCheck('Number');
       this.appendDummyInput().appendField('ms');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('120');
-      this.setTooltip('Esperar um determinado número de milissegundos.');
+      this.setTooltip(t('BLOCK_WAIT_A_SPECIFIED_NUMBER_OF_MILLISECONDS'));
       this.setHelpUrl('');
     },
   };
@@ -196,11 +197,11 @@ export function registerControlBlocks() {
   Blockly.Blocks['robControls_wait_for'] = {
     ...ROB_WAIT_FOR_MUTATOR,
     init() {
-      this.appendValueInput('WAIT0').setCheck('Boolean').appendField('esperar até');
+      this.appendValueInput('WAIT0').setCheck('Boolean').appendField(t('BLOCK_WAIT_UNTIL'));
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('120');
-      this.setTooltip('Esperar até uma condição ser verdadeira.');
+      this.setTooltip(t('BLOCK_WAIT_UNTIL_A_CONDITION_IS_TRUE'));
       this.setHelpUrl('');
       // BUTTONS row + any persisted extra WAITn arms are added here.
       this.updateShape_();
@@ -212,15 +213,15 @@ export function registerControlBlocks() {
   Blockly.Blocks['robMath_change'] = {
     init() {
       this.appendDummyInput()
-        .appendField('aumentar')
+        .appendField(t('BLOCK_INCREASE'))
         .appendField(new Blockly.FieldVariable('i'), 'VAR')
-        .appendField('em');
+        .appendField(t('BLOCK_BY'));
       this.appendValueInput('DELTA').setCheck('Number');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('230');
-      this.setTooltip('Incrementar o valor de uma variável.');
+      this.setTooltip(t('BLOCK_INCREMENT_THE_VALUE_OF_A_VARIABLE'));
       this.setHelpUrl('');
     },
   };
@@ -232,11 +233,11 @@ export function registerControlBlocks() {
   Blockly.Blocks['robText_join'] = {
     ...ROB_TEXT_JOIN_MUTATOR,
     init() {
-      this.appendValueInput('ADD0').appendField('juntar');
+      this.appendValueInput('ADD0').appendField(t('BLOCK_JOIN'));
       this.appendValueInput('ADD1');
       this.setOutput(true, 'String');
       this.setColour('160');
-      this.setTooltip('Juntar textos num só.');
+      this.setTooltip(t('BLOCK_JOIN_TEXT_INTO_A_SINGLE_STRING'));
       this.setHelpUrl('');
       // BUTTONS row + any persisted extra ADDn arms are added here.
       this.updateShape_();
@@ -245,16 +246,16 @@ export function registerControlBlocks() {
 
   Blockly.Blocks['robText_append'] = {
     init() {
-      this.appendDummyInput().appendField('acrescentar texto');
+      this.appendDummyInput().appendField(t('BLOCK_APPEND_TEXT'));
       this.appendValueInput('TEXT').setCheck('String');
       this.appendDummyInput()
-        .appendField('à variável')
-        .appendField(new Blockly.FieldVariable('texto'), 'VAR');
+        .appendField(t('BLOCK_TO_VARIABLE'))
+        .appendField(new Blockly.FieldVariable(t('VARIABLE_TEXT')), 'VAR');
       this.setInputsInline(true);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('160');
-      this.setTooltip('Acrescentar texto a uma variável de texto.');
+      this.setTooltip(t('BLOCK_APPEND_TEXT_TO_A_TEXT_VARIABLE'));
       this.setHelpUrl('');
     },
   };
@@ -270,7 +271,7 @@ export function registerControlBlocks() {
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setColour('290');
-      this.setTooltip('Comentário — não executado.');
+      this.setTooltip(t('BLOCK_COMMENT_NOT_EXECUTED'));
       this.setHelpUrl('');
     },
   };

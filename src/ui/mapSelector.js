@@ -1,3 +1,4 @@
+import { t } from '../i18n/index.js';
 import { getMapCatalogue } from '../sim/mapCatalogue.js';
 import { loadMapFromUrl }  from '../sim/mapLoader.js';
 import { setMapData }      from '../sim/map.js';
@@ -18,7 +19,7 @@ export async function initMapSelector() {
 
   if (_catalogue.length === 0) {
     console.warn('[mapSelector] No maps found in catalogue; using blank canvas');
-    appendConsoleMessage('Atenção: nenhum mapa encontrado em public/maps/.', 'warn');
+    appendConsoleMessage(t('MAP_NONE_FOUND'), 'warn');
     return;
   }
 
@@ -42,7 +43,7 @@ export async function initMapSelector() {
 
     const state = getRunState();
     if (state === RunState.RUNNING || state === RunState.PAUSED_ASYNC) {
-      const ok = window.confirm('Mudar de mapa irá parar o programa. Continuar?');
+      const ok = window.confirm(t('MAP_CHANGE_CONFIRM'));
       if (!ok) {
         select.value = _activeMapName;  // revert dropdown to currently loaded map
         return;
@@ -66,6 +67,6 @@ async function _loadMap(entry) {
     console.log(`[mapSelector] Loaded "${entry.name}" — ${mapInfo.width}×${mapInfo.height} cm, spawn (${mapInfo.spawnX.toFixed(1)}, ${mapInfo.spawnY.toFixed(1)}), heading ${(mapInfo.spawnHeading * 180 / Math.PI).toFixed(1)}°`);
   } catch (err) {
     console.error('[mapSelector] Failed to load map:', err);
-    appendConsoleMessage(`Erro ao carregar o mapa "${entry.name}": ${err.message}`, 'error');
+    appendConsoleMessage(t('MAP_LOAD_ERROR', { name: entry.name, error: err.message }), 'error');
   }
 }
