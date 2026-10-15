@@ -21,14 +21,28 @@ const loaders = {
   de: async () => Promise.all([import('./messages/de.js').then(m => m.default), import('blockly/msg/de')]),
 };
 
-let language = 'en';
-let messages = english;
+function languageState(code, catalogue, blockly) {
+  return {
+    code,
+    catalogue,
+    blocklyMessages: {
+      ...EnglishBlockly,
+      ...blockly,
+      ...(code === 'pt' ? ptMessages : {}),
+      ...english,
+      ...catalogue,
+    },
+  };
+}
+
+let activeLanguage = languageState('en', english, EnglishBlockly);
 
 export function resolveLanguage(code) {
   return languages.some(item => item.code === code) ? code : 'en';
 }
 
-export function getLanguage() { return language; }
+export function getLanguage() { return activeLanguage.code; }
+export function getActiveLanguage() { return activeLanguage; }
 
 export function getSavedLanguage() {
   try { return resolveLanguage(localStorage.getItem(LANGUAGE_STORAGE_KEY)); }
@@ -36,26 +50,28 @@ export function getSavedLanguage() {
 }
 
 export function saveLanguage() {
-  try { localStorage.setItem(LANGUAGE_STORAGE_KEY, language); }
+  try { localStorage.setItem(LANGUAGE_STORAGE_KEY, getLanguage()); }
   catch (_) { /* Language switching also works when storage is unavailable. */ }
 }
 
-export async function loadLanguage(code) {
+// Loading chunks must not change the active interface before its caller is ready.
+export async function prepareLanguage(code) {
   const next = resolveLanguage(code);
   const [catalogue, blockly] = await loaders[next]();
-  language = next;
-  messages = catalogue;
-  return {
-    ...EnglishBlockly,
-    ...blockly,
-    ...(next === 'pt' ? ptMessages : {}),
-    ...english,
-    ...catalogue,
-  };
+  return languageState(next, catalogue, blockly);
+}
+
+export function activateLanguage(prepared) {
+  activeLanguage = prepared;
+  return prepared.blocklyMessages;
+}
+
+export async function loadLanguage(code) {
+  return activateLanguage(await prepareLanguage(code));
 }
 
 export function t(key, values = {}) {
-  const text = messages[key] ?? english[key] ?? key;
+  const text = activeLanguage.catalogue[key] ?? english[key] ?? key;
   return text.replace(/\{(\w+)\}/g, (match, name) =>
     Object.hasOwn(values, name) ? String(values[name]) : match);
 }
