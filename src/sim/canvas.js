@@ -7,6 +7,8 @@ import { drawMap, hasMap, getMapSizeCm, getColorNameAt } from './map.js';
 import { ledState, resetLeds } from './leds.js';
 import { resetDisplay } from '../ui/display.js';
 import { getQuadRGBWorldPositions, getQuadRGBProbeData, getUltrasonicConeRays, resetTickCache } from './sensors.js';
+import { getEndOnCollision } from './settings.js';
+import { appendConsoleMessage } from '../ui/console.js';
 
 let ctx    = null;
 let canvas = null;
@@ -107,7 +109,19 @@ function loop(now) {
   lastTime   = now;
   const dt   = Math.min(dtMs / 1000, MAX_DT);
 
-  if (!paused) step(robot, dt);
+  if (!paused) {
+    const wasColliding = robot.collided;
+    const endOnCollision = getEndOnCollision();
+    step(robot, dt, { endOnCollision });
+    if (robot.collision) {
+      robot.lastCollision = robot.collision;
+      if (!wasColliding && !endOnCollision) {
+        appendConsoleMessage(t('COLLISION_AT', {
+          x: robot.collision.x.toFixed(1), y: robot.collision.y.toFixed(1),
+        }), 'warn');
+      }
+    }
+  }
 
   // Clear per-tick sensor cache every frame so visualisations (cone, quad-RGB dots)
   // always reflect current robot position, even when no interpreter is running.
@@ -228,6 +242,7 @@ function draw() {
   // always appears at ~14 px visual size regardless of the native canvas resolution.
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   const cssScale  = (canvas.getBoundingClientRect().width / canvas.width) || 1;
+  drawCollisionMarker(cssScale);
   const hudFont   = Math.round(14 / cssScale);
   const hudLine   = Math.round(20 / cssScale);
   const hudX      = Math.round(10 / cssScale);
@@ -250,6 +265,37 @@ function draw() {
     ctx.fillStyle = '#f87171';
     ctx.fillText(t('HUD_PAUSED'), hudX, hudY0 + hudLine * 4);
   }
+}
+
+function drawCollisionMarker(cssScale) {
+  const contact = robot.lastCollision;
+  if (!contact) return;
+  const x = contact.x * PX_PER_CM * camera.scale + camera.offsetX;
+  const y = contact.y * PX_PER_CM * camera.scale + camera.offsetY;
+  if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) return;
+
+  const size = 5 / cssScale;
+  const font = 12 / cssScale;
+  const padding = 4 / cssScale;
+  const label = t('COLLISION_MARKER', { x: contact.x.toFixed(1), y: contact.y.toFixed(1) });
+  ctx.save();
+  ctx.strokeStyle = '#dc2626';
+  ctx.lineWidth = 2 / cssScale;
+  ctx.beginPath();
+  ctx.moveTo(x - size, y - size);
+  ctx.lineTo(x + size, y + size);
+  ctx.moveTo(x + size, y - size);
+  ctx.lineTo(x - size, y + size);
+  ctx.stroke();
+  ctx.font = `${font}px sans-serif`;
+  const width = ctx.measureText(label).width + padding * 2;
+  const left = Math.max(0, Math.min(x + size + padding, canvas.width - width));
+  const top = Math.max(0, Math.min(y - font - padding, canvas.height - font - padding * 2));
+  ctx.fillStyle = 'rgba(255,255,255,0.95)';
+  ctx.fillRect(left, top, width, font + padding * 2);
+  ctx.fillStyle = '#b91c1c';
+  ctx.fillText(label, left + padding, top + font + padding / 2);
+  ctx.restore();
 }
 
 function drawGrid() {

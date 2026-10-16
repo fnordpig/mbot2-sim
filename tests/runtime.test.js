@@ -9,6 +9,7 @@ import { robotAPI } from '../src/sim/robotAPI.js';
 import { step } from '../src/sim/kinematics.js';
 import { setMapData } from '../src/sim/map.js';
 import { asyncTicket, getRunState, RunState } from '../src/runtime/runState.js';
+import { setEndOnCollision } from '../src/sim/settings.js';
 
 const frames = new Map();
 let nextFrameId = 0;
@@ -78,6 +79,7 @@ function assertAudioStopped() {
 }
 
 test.beforeEach(() => {
+  setEndOnCollision(true);
   resetRobot();
   oscillators.length = 0;
   setMapData({ imageData: null, width: 0, height: 0, offscreenCanvas: { width: 0, height: 0 } });
@@ -85,6 +87,7 @@ test.beforeEach(() => {
 
 test.afterEach(() => {
   stop();
+  setEndOnCollision(true);
   robotAPI.audio_stop();
   frames.clear();
   delete robotAPI.runtime_test_async;
@@ -219,3 +222,59 @@ test('interpreter construction failures stop prior audio', () => {
   assertStopped();
   assertAudioStopped();
 });
+
+test('a physics contact ends execution even when the circle stops outside the wall', () => {
+  runCode('robotAPI.play_tone(440, 30000); robotAPI.drive_for("FORWARD", 30, 100);\n');
+  frame();
+  robot.collided = true;
+  robot.collision = { x: 10, y: 10, normalX: -1, normalY: 0 };
+  frame();
+  assertStopped(RunState.STOPPED);
+  assertAudioStopped();
+});
+
+test('disabling collision stopping keeps execution and pending movement active', () => {
+  setEndOnCollision(false);
+  runCode('robotAPI.play_tone(440, 30000); robotAPI.drive_for("FORWARD", 30, 100);\n');
+  frame();
+  robot.x = 0;
+  robot.y = 0;
+  robot.collided = true;
+  robot.collision = { x: 0, y: 0, normalX: -1, normalY: 0 };
+  setMapData({ imageData: new Uint8ClampedArray([255, 0, 255, 255]), width: 1, height: 1,
+    offscreenCanvas: { width: 1, height: 1 } });
+  frame();
+  assert.equal(getRunState(), RunState.PAUSED_ASYNC);
+  assert.equal(asyncTicket.pending, true);
+  assert.equal(robot.vL, 30);
+  assert.equal(robot.vR, 30);
+  assert.equal(frames.size, 1);
+  assert.deepEqual(oscillators[0].stops, [30]);
+  stop();
+  assertStopped(RunState.STOPPED);
+  assertAudioStopped();
+});
+
+for (const command of ['drive_for("FORWARD", 30, 0.05)', 'curve_for("FORWARD", 30, 20, 0.05)']) {
+  test(`${command} completes its wheel travel without snapping a stalled robot backwards`, () => {
+    setEndOnCollision(false);
+    const pixels = new Uint8ClampedArray(160 * 160 * 4);
+    for (let y = 0; y < 160; y++) {
+      const offset = (y * 160 + 100) * 4;
+      pixels.set([255, 0, 255, 255], offset);
+    }
+    setMapData({ imageData: pixels, width: 20, height: 20, offscreenCanvas: { width: 160, height: 160 } });
+    robot.x = 8;
+    robot.y = 10;
+    robot.theta = 0;
+    runCode(`robotAPI.${command};\n`);
+    frame();
+    step(robot, 1 / 30, { endOnCollision: false });
+    assert.equal(robot.collided, true);
+    frame();
+    assertStopped(RunState.IDLE);
+    assert.ok(Math.abs(robot.x - 8) < 1e-5, 'blocked motion must not be undone as free travel');
+    assert.ok(Math.abs(robot.y - 10) < 1e-5);
+    assert.ok(Math.abs(robot.totalDistanceCm - 0.05) < 1e-9);
+  });
+}

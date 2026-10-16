@@ -131,8 +131,11 @@ export const robotAPI = {
         // The canvas loop already advanced the position by one full frame; we undo the excess.
         const overshoot = traveled - d;
         if (overshoot > 0) {
-          robot.x -= sign * Math.cos(robot.theta) * overshoot;
-          robot.y -= sign * Math.sin(robot.theta) * overshoot;
+          // Wheel travel continues while the body slides or stalls against a wall.
+          if (!robot.collided) {
+            robot.x -= sign * Math.cos(robot.theta) * overshoot;
+            robot.y -= sign * Math.sin(robot.theta) * overshoot;
+          }
           robot.totalDistanceCm -= overshoot;
         }
         setWheelSpeeds(0, 0);
@@ -192,8 +195,10 @@ export const robotAPI = {
         const overshoot = traveled - d;
         if (overshoot > 0) {
           // Approximate correction along the current heading (good enough for small overshoot)
-          robot.x -= sign * Math.cos(robot.theta) * overshoot;
-          robot.y -= sign * Math.sin(robot.theta) * overshoot;
+          if (!robot.collided) {
+            robot.x -= sign * Math.cos(robot.theta) * overshoot;
+            robot.y -= sign * Math.sin(robot.theta) * overshoot;
+          }
           robot.totalDistanceCm -= overshoot;
         }
         setWheelSpeeds(0, 0);

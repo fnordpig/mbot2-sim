@@ -18,6 +18,8 @@ export const robot = {
   vL: 0,
   vR: 0,
   collided: false,
+  collision: null,
+  lastCollision: null,
   totalDistanceCm: 0,
   totalRotationRad: 0,
   encoderLeftAbs: 0,
@@ -43,6 +45,8 @@ export function resetRobot() {
   robot.vL              = 0;
   robot.vR              = 0;
   robot.collided        = false;
+  robot.collision       = null;
+  robot.lastCollision   = null;
   robot.totalDistanceCm = 0;
   robot.totalRotationRad = 0;
   robot.encoderLeftAbs  = 0;

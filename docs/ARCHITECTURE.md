@@ -291,7 +291,11 @@ If no cyan zone is found, spawn defaults to the canvas centre (half of map width
 
 ### Obstacle detection
 
-`isObstacle(x, y)` in `src/sim/map.js` checks if a circle of radius `BODY_RADIUS_CM = 4.5` centred at `(x, y)` intersects any magenta pixel `(R=255, G=0, B=255)`. Collision is detected via `isMagentaCollision()` which samples the robot's bounding circle at several points.
+`src/sim/collision.js` sweeps the robot's circular footprint (`BODY_RADIUS_CM = 4.5`) against magenta obstacle pixels and map boundaries. Pixel edges and rounded corner contacts determine the earliest collision, preventing the robot from tunnelling through thin walls. `visitObstaclePixels()` in `src/sim/map.js` supplies obstacle pixels in the swept region. `isMagentaCollision()` remains a sampled overlap guard for the runtime.
+
+End on collision defaults to true. With it disabled, the solver removes the inward component of the remaining displacement: `d = d - min(0, d · n) n`, where `n` is the outward contact normal. The unchanged tangent component slides along the wall; a head-on movement stalls. Further contacts constrain the remaining movement at corners. Wheel odometry, encoders and rotation continue to reflect commanded wheel motion while the body is constrained.
+
+`src/sim/settings.js` stores the collision preference, with an in-memory fallback when browser storage is unavailable. The Settings dialog also contains the map and language selectors and expert toolbox toggle; these inputs are disabled during execution. The canvas logs coordinates once per continuous contact when sliding is enabled and displays the latest contact marker. Resetting the robot or changing maps clears that marker.
 
 ### Vite catalogue plugin
 

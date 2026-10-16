@@ -79,6 +79,25 @@ export function getMapSizeCm() {
   return { wCm: mapWidthCm, hCm: mapHeightCm };
 }
 
+// Visit solid pixel squares intersecting a world-space rectangle. Collision
+// queries use squared distance directly rather than matching the sensor palette.
+export function visitObstaclePixels(minX, minY, maxX, maxY, visit) {
+  if (!pixels) return;
+  const left = Math.max(0, Math.floor(minX * DISPLAY_SCALE));
+  const top = Math.max(0, Math.floor(minY * DISPLAY_SCALE));
+  const right = Math.min(mapWidthPx - 1, Math.floor(maxX * DISPLAY_SCALE));
+  const bottom = Math.min(mapHeightPx - 1, Math.floor(maxY * DISPLAY_SCALE));
+  for (let y = top; y <= bottom; y++) for (let x = left; x <= right; x++) {
+    const i = (y * mapWidthPx + x) * 4;
+    const red = pixels[i] - 255;
+    const green = pixels[i + 1];
+    const blue = pixels[i + 2] - 255;
+    if (red * red + green * green + blue * blue <= TOLERANCE * TOLERANCE) {
+      visit(x / DISPLAY_SCALE, y / DISPLAY_SCALE, (x + 1) / DISPLAY_SCALE, (y + 1) / DISPLAY_SCALE);
+    }
+  }
+}
+
 // Returns {r, g, b, a} or null if out-of-bounds / no map loaded.
 // xCm, yCm are world-space centimetres; converted to map pixel coords here.
 export function getPixelAt(xCm, yCm) {

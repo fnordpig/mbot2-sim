@@ -7,6 +7,7 @@ import { robot, resetMotors, ROBOT_CONSTANTS } from '../sim/robot.js';
 import { resetTickCache, resetSensors, getQuadRGBProbeData } from '../sim/sensors.js';
 import { isMagentaCollision } from '../sim/map.js';
 import { robotAPI } from '../sim/robotAPI.js';
+import { getEndOnCollision } from '../sim/settings.js';
 
 const STEP_BUDGET_PER_FRAME = 1000;
 
@@ -83,7 +84,7 @@ function advanceInterpreter() {
   window.simState.quadRGBProbes = getQuadRGBProbeData();
 
   // Magenta collision → halt the program cleanly (not an error, an expected obstacle hit)
-  if (isMagentaCollision(robot.x, robot.y, ROBOT_CONSTANTS.BODY_RADIUS_CM)) {
+  if (getEndOnCollision() && (robot.collided || isMagentaCollision(robot.x, robot.y, ROBOT_CONSTANTS.BODY_RADIUS_CM))) {
     clearExecution();
     setRunState(RunState.STOPPED);
     appendConsoleMessage(t('PROGRAM_COLLISION'), 'error');

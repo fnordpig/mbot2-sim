@@ -79,9 +79,9 @@ export function initControls() {
     if (isPaused()) resumeSim(); else pauseSim();
   });
 
-  const toolboxSelect = document.getElementById('toolbox-mode');
-  if (toolboxSelect) {
-    toolboxSelect.addEventListener('change', (e) => setToolboxMode(e.target.value));
+  const toolboxToggle = document.getElementById('toolbox-mode');
+  if (toolboxToggle) {
+    toolboxToggle.addEventListener('change', (e) => setToolboxMode(e.target.checked ? 'expert' : 'beginner'));
   }
 
   onRunStateChange((state) => {

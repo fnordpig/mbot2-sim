@@ -1,5 +1,5 @@
 import { ROBOT_CONSTANTS } from './robot.js';
-import { isObstacle } from './map.js';
+import { moveCircle } from './collision.js';
 
 /**
  * Integrate one timestep of differential-drive kinematics.
@@ -8,10 +8,11 @@ import { isObstacle } from './map.js';
  * @param {object} robot - {x, y, theta} in cm/rad, vL/vR in RPM
  * @param {number} dt - delta time in seconds
  */
-export function step(robot, dt) {
+export function step(robot, dt, { endOnCollision = true } = {}) {
   const { WHEEL_CIRCUMFERENCE_CM, TRACK_WIDTH_CM } = ROBOT_CONSTANTS;
 
   robot.collided = false;
+  robot.collision = null;
 
   // RPM → cm/s per wheel
   const vL_cms = (robot.vL / 60) * WHEEL_CIRCUMFERENCE_CM;
@@ -32,22 +33,11 @@ export function step(robot, dt) {
   if (robot.theta > Math.PI) robot.theta -= 2 * Math.PI;
   if (robot.theta < -Math.PI) robot.theta += 2 * Math.PI;
 
-  // Axis-separated collision: try full move, then slide along each axis
-  const newX = robot.x + dx;
-  const newY = robot.y + dy;
-
-  if (!isObstacle(newX, newY)) {
-    robot.x = newX;
-    robot.y = newY;
-  } else {
-    robot.collided = true;
-    if (!isObstacle(newX, robot.y)) {
-      robot.x = newX;           // slide along X axis
-    } else if (!isObstacle(robot.x, newY)) {
-      robot.y = newY;           // slide along Y axis
-    }
-    // else: fully blocked — position unchanged
-  }
+  const movement = moveCircle(robot.x, robot.y, dx, dy, ROBOT_CONSTANTS.BODY_RADIUS_CM, endOnCollision);
+  robot.x = movement.x;
+  robot.y = movement.y;
+  robot.collision = movement.collision;
+  robot.collided = movement.collision !== null;
 
   robot.totalDistanceCm += Math.abs(vLinear) * dt;
   robot.totalRotationRad += Math.abs(dTheta);

@@ -5,8 +5,19 @@ body { display: flex; flex-direction: column; }
 #topbar h1 { font-size: 1.1rem; margin: 0; }
 #controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 #controls button, #controls select, #controls input { padding: 6px 12px; }
-#map-select-label { color: white; font-size: 0.9rem; white-space: nowrap; }
+#map-select-label { font-size: 0.9rem; white-space: nowrap; }
 #map-select { min-width: 120px; }
+#settings-dialog { width: min(420px, calc(100% - 32px)); padding: 20px; border: 1px solid #9ca3af; border-radius: 8px; color: #1f2937; background: #f9fafb; }
+#settings-dialog::backdrop { background: rgb(0 0 0 / 40%); }
+.settings-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.settings-header h2 { margin: 0; font-size: 1.2rem; }
+#settings-dialog button, #settings-dialog select { padding: 6px 12px; }
+.settings-field { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.settings-field select { flex: 1; min-width: 0; }
+.settings-toggle { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+.settings-toggle input { width: 18px; height: 18px; margin: 0; }
+#settings-dialog p { margin: 8px 0 0; font-size: 0.9rem; line-height: 1.5; color: #4b5563; }
+#settings-running-hint { padding-top: 12px; }
 main { display: flex; flex: 1; min-height: 0; overflow: hidden; }
 #blockly-area { flex: 1; min-width: 0; }
 #sim-area {

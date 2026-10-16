@@ -24,7 +24,7 @@ A static, client-side web application that gives robotics classrooms a sandboxed
 
 - Open Roberta Lab toolbox (Beginner + Expert) with six interface languages
 - All locomotion, audio, display, LED, sensor, control-flow, math, text, list, and communication blocks implemented
-- 2D differential-drive physics at 60 fps (differential drive, axis-separated collision)
+- 2D differential-drive physics at 60 fps, with swept circular collision detection and optional wall sliding
 - 3-ray ultrasonic cone raycast (15° aperture) against obstacle pixels
 - Quad-RGB colour sensor (4 sub-sensors) with 8-colour palette + brightness + line-code
 - PNG-based map system with automatic spawn-point detection (cyan/yellow markers)
@@ -49,6 +49,8 @@ npm run dev          # dev server at http://localhost:5173
 ```
 
 The language selector updates menus, custom blocks, tooltips, and application messages without changing the program. An explicit selection is remembered on this browser when local storage is available. Otherwise startup uses the first supported browser preference, matching regional variants such as fr-CA to French. Unsupported preferences fall back to English. Language switching is disabled while a program runs. Map filenames and text entered by students retain their original spelling.
+
+Open Settings to choose a map or language, enable the expert toolbox, or change End on collision. Programs stop on collision by default. Turn it off to continue running and slide along walls; the simulator logs the contact coordinates and marks the latest contact on the map. This preference is remembered when browser storage is available. Stop the program before changing these settings.
 
 Run `npm test` for regression checks before `npm run build` and browser testing.
 

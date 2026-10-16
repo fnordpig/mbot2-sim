@@ -82,7 +82,7 @@ Map PNGs use three reserved colours. They are invisible to all sensors and do NO
 
 | Colour  | Hex       | Meaning |
 |---------|-----------|---------|
-| Magenta | `#ff00ff` | Obstacle wall — robot collision halt |
+| Magenta | `#ff00ff` | Obstacle wall — halt by default; optional wall sliding in Settings |
 | Cyan    | `#00ffff` | Spawn zone body — centroid = robot start position |
 | Yellow  | `#ffff00` | Spawn direction marker — vector cyan→yellow = robot heading |
 

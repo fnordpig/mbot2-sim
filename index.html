@@ -18,16 +18,33 @@
       <button id="btn-load" data-i18n="LOAD">Load</button>
       <button id="btn-new" data-i18n="NEW">New</button>
       <input type="file" id="file-input-load" accept=".xml" style="display:none" />
+      <button id="btn-settings" data-i18n="SETTINGS" aria-haspopup="dialog" aria-controls="settings-dialog">Settings</button>
+    </div>
+  </header>
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <div class="settings-header">
+      <h2 id="settings-title" data-i18n="SETTINGS">Settings</h2>
+      <button id="btn-settings-close" data-i18n="SETTINGS_CLOSE" autofocus>Close</button>
+    </div>
+    <div class="settings-field">
       <label for="map-select" id="map-select-label" data-i18n="MAP_LABEL">Map:</label>
       <select id="map-select" title="Select map" data-i18n-title="MAP_SELECT" data-i18n-label="MAP_SELECT"></select>
-      <select id="toolbox-mode" aria-label="Toolbox level" data-i18n-label="TOOLBOX_MODE">
-        <option value="beginner" data-i18n="BEGINNER">Beginner</option>
-        <option value="expert" data-i18n="EXPERT">Expert</option>
-      </select>
+    </div>
+    <div class="settings-field">
       <label for="language-select" data-i18n="LANGUAGE">Language</label>
       <select id="language-select" aria-label="Language" data-i18n-label="LANGUAGE"></select>
     </div>
-  </header>
+    <label class="settings-toggle">
+      <input type="checkbox" id="toolbox-mode" />
+      <span data-i18n="SETTINGS_EXPERT">Expert toolbox</span>
+    </label>
+    <label class="settings-toggle">
+      <input type="checkbox" id="end-on-collision" aria-describedby="settings-collision-help" checked />
+      <span data-i18n="SETTINGS_END_COLLISION">End on collision</span>
+    </label>
+    <p id="settings-collision-help" data-i18n="SETTINGS_COLLISION_HELP">Turn off to slide along walls and continue running.</p>
+    <p id="settings-running-hint" data-i18n="SETTINGS_RUNNING_HINT" hidden>Stop the program to change settings.</p>
+  </dialog>
   <main>
     <div id="blockly-area"></div>
     <div id="sim-area">
